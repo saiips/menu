@@ -1,0 +1,2490 @@
+swagger: '2.0'
+info:
+  description: Directbank bundle application API service
+  version: 1.0.0
+  title: Directbank bundle application
+  contact: {}
+host: 'localhost:8085'
+basePath: /directbank/bundle/v1
+tags:
+  - name: applications-api-controller
+    description: the applications API
+  - name: eligibility-api-controller
+    description: the eligibility API
+  - name: offers-api-controller
+    description: the offers API
+  - name: postlogin-api-controller
+    description: the postlogin API
+  - name: existence-api-controller
+    description: the existence API
+  - name: ekyc-api-controller
+    description: the ekyc API
+  - name: document-api-controller
+    description: the document API
+  - name: save-application-api-controller
+    description: the saveApplication API
+  - name: wip-api-controller
+    description: the wip API
+  - name: pib-api-controller
+    description: the pib API
+  - name: rate-api-controller
+    description: the rate API
+  - name: application-api-controller
+    description: the application API
+  - name: submission-api-controller
+    description: the submission API
+paths:
+  '/application/detail/{refNo}':
+    get:
+      tags:
+        - application
+      summary: Retrieve application detail by application reference number
+      description: Retrieve application detail by application reference number
+      operationId: applicationDetailRefNoGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: refNo
+          in: path
+          description: Direct Bank reference ID
+          required: true
+          type: string
+      responses:
+        '200':
+          description: The request is served successfully.
+          schema:
+            $ref: '#/definitions/BoBundleApplicationResp'
+        '400':
+          description: User agent did not provide a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/application/qaStatus/{refNo}':
+    post:
+      tags:
+        - application
+      summary: applicationRefNoQaStatusUpdate
+      description: Update the application qaStatus
+      operationId: applicationRefNoQaStatusUpdate
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: refNo
+          in: path
+          description: refNo
+          required: true
+          type: string
+        - name: qaStatus
+          in: query
+          description: update qaStatus
+          required: false
+          type: string
+        - in: body
+          name: makerActionReq
+          description: JSON request object.
+          required: true
+          schema:
+            $ref: '#/definitions/MakerActionReq'
+      responses:
+        '200':
+          description: Update qaStatus successfully
+        '201':
+          description: Created
+        '400':
+          description: The request is invalid
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/Error'
+  '/application/status/{refNo}':
+    get:
+      tags:
+        - application
+      summary: applicationStatusRefNoGet
+      description: Retrieve the application status
+      operationId: applicationStatusRefNoGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: refNo
+          in: path
+          description: refNo
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Application status retrieved sucessfully
+          schema:
+            $ref: '#/definitions/BundleApplicationStatusResp'
+        '400':
+          description: The request is invalid
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/Error'
+  '/application/{refNo}':
+    get:
+      tags:
+        - application
+      summary: applicationRefNoGet
+      description: Retrieve the aplication
+      operationId: applicationRefNoGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: refNo
+          in: path
+          description: refNo
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Saved application successfully
+          schema:
+            $ref: '#/definitions/BundleApplicationResp'
+        '400':
+          description: The request is not a valid request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/Error'
+  '/application/{refNo}/checkerAction':
+    post:
+      tags:
+        - application
+      summary: Checker Action
+      operationId: applicationRefNoCheckerActionPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: refNo
+          in: path
+          description: To update application form with input application reference number.
+          required: true
+          type: string
+        - in: body
+          name: checkerActionReq
+          description: JSON request object.
+          required: true
+          schema:
+            $ref: '#/definitions/CheckerActionReq'
+      responses:
+        '200':
+          description: The application form summary is updated successfully
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/application/{refNo}/makerAction':
+    post:
+      tags:
+        - application
+      summary: Maker Action
+      operationId: applicationRefNoMakerActionPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: refNo
+          in: path
+          description: To update application form with input application reference number.
+          required: true
+          type: string
+        - in: body
+          name: makerActionReq
+          description: JSON request object.
+          required: true
+          schema:
+            $ref: '#/definitions/MakerActionReq'
+      responses:
+        '200':
+          description: The application form summary is updated successfully
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/application/{refNo}/submit':
+    post:
+      tags:
+        - application
+      summary: applicationRefNoSubmitPost
+      description: Submit the application
+      operationId: applicationRefNoSubmitPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: refNo
+          in: path
+          description: refNo
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Application submitted successfully
+        '201':
+          description: Created
+        '400':
+          description: The request is invalid
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/Error'
+  /applications:
+    get:
+      tags:
+        - application
+      summary: Retrieve list of basis info in application form
+      description: This API is to retrieve list of basis info of application forms by inputting different parameters. The list is sorted by the submission date.
+      operationId: applicationsGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: submitDateFrom
+          in: query
+          description: To retrieve application form with submission date from input parameter. The format is yyyy-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: submitDateTo
+          in: query
+          description: To retrieve application form with submission date to input parameter. The format is yyyy-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: countryCode
+          in: query
+          description: To retrieve application form with input country code.
+          required: false
+          type: string
+        - name: mobileNo
+          in: query
+          description: To retrieve application form with input mobile number.
+          required: false
+          type: string
+        - name: email
+          in: query
+          description: To retrieve application form with input email.
+          required: false
+          type: string
+        - name: documentType
+          in: query
+          description: Document Type
+          required: false
+          type: string
+          enum:
+            - HKID_2003
+            - HKID_2018
+        - name: frScoreLow
+          in: query
+          description: FR Score of TU eKYC (0.00 - 100.00)
+          required: false
+          type: number
+          format: float
+        - name: frScoreHigh
+          in: query
+          description: FR Score of TU eKYC (0.00 - 100.00)
+          required: false
+          type: number
+          format: float
+        - name: tamperScoreLow
+          in: query
+          description: Tamper Score of TU eKYC (0.00 - 1.00)
+          required: false
+          type: number
+          format: float
+        - name: tamperScoreHigh
+          in: query
+          description: Tamper Score of TU eKYC (0.00 - 1.00)
+          required: false
+          type: number
+          format: float
+        - name: confiScoreLow
+          in: query
+          description: Confidence Score of TU eKYC (0.00 - 1.00)
+          required: false
+          type: number
+          format: float
+        - name: confiScoreHigh
+          in: query
+          description: Confidence Score of TU eKYC (0.00 - 1.00)
+          required: false
+          type: number
+          format: float
+        - name: videoScoreLow
+          in: query
+          description: Confidence Score of TU eKYC (0.00 - 1.00)
+          required: false
+          type: number
+          format: float
+        - name: videoScoreHigh
+          in: query
+          description: Confidence Score of TU eKYC (0.00 - 1.00)
+          required: false
+          type: number
+          format: float
+        - name: fmScoreLow
+          in: query
+          description: Facial Match Score of TU eKYC (0.00 - 1.00)
+          required: false
+          type: number
+          format: float
+        - name: fmScoreHigh
+          in: query
+          description: Facial Match Score of TU eKYC (0.00 - 1.00)
+          required: false
+          type: number
+          format: float
+        - name: daResult
+          in: query
+          description: TU document authentication result
+          required: false
+          type: string
+          enum:
+            - PASS
+            - FAIL
+            - MANUAL
+            - RECAPTURE
+        - name: ekycResult
+          in: query
+          description: TU eKYC overal result
+          required: false
+          type: string
+          enum:
+            - PASS
+            - FAIL
+            - MANUAL
+            - RECAPTURE
+        - name: refId
+          in: query
+          description: To retrieve application form with input application reference id.
+          required: false
+          type: string
+        - name: id
+          in: query
+          description: To retrieve application form with input customer identity number.
+          required: false
+          type: string
+        - name: status
+          in: query
+          description: To retrieve application form with bundled status.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: eaoStatus
+          in: query
+          description: To retrieve application form with eAO status.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: vccStatus
+          in: query
+          description: To retrieve application form with vcc status.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: applicationType
+          in: query
+          description: To indicate EAO(E)/VCC(V) only application
+          required: false
+          type: string
+        - name: lastUpdateHandler
+          in: query
+          description: lastUpdateHandler
+          required: false
+          type: string
+          enum:
+            - SYSTEM
+            - STAFF
+        - name: lastUpdateFrom
+          in: query
+          description: To retrieve application form with last update date from input parameter. The format is yyyy-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: lastUpdateTo
+          in: query
+          description: To retrieve application form with last update date to input parameter.
+          required: false
+          type: string
+          format: date
+        - name: pageSize
+          in: query
+          description: To indicate the number of forms return per time.
+          required: false
+          type: string
+        - name: pageIdx
+          in: query
+          description: To indicate the page index for returning forms.
+          required: false
+          type: string
+        - name: qaStatus
+          in: query
+          description: To retrieve application form with input QA status.
+          required: false
+          type: string
+      responses:
+        '200':
+          description: The application form summary is returned successfully
+          schema:
+            $ref: '#/definitions/BundleApplicationListResp'
+        '400':
+          description: The request is not a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/Error'
+  '/document/binding/{refNo}':
+    post:
+      tags:
+        - document upload
+      summary: documentBindingRefNoPost
+      description: Bind document reference number
+      operationId: documentBindingRefNoPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: refNo
+          in: path
+          description: refNo
+          required: true
+          type: string
+        - in: body
+          name: documentInfo
+          description: documentInfo
+          required: true
+          schema:
+            $ref: '#/definitions/BundleDocumentInfo'
+      responses:
+        '200':
+          description: Pib account reserved sucessfully
+        '201':
+          description: Created
+        '400':
+          description: The request is invalid
+        '401':
+          description: Unauthorized
+        '403':
+          description: The account name has been used
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/Error'
+  '/ekyc/binding/{refNo}':
+    post:
+      tags:
+        - ekyc-api-controller
+      summary: ekycBindingRefNoPost
+      description: Bind ekyc result to bundle application
+      operationId: ekycBindingRefNoPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: refNo
+          in: path
+          description: refNo
+          required: true
+          type: string
+        - in: body
+          name: ekycBindingReq
+          description: ekycBindingReq
+          required: true
+          schema:
+            $ref: '#/definitions/EkycBindingReq'
+      responses:
+        '200':
+          description: Bind ekyc result to bundle application successfully
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/Error'
+  '/eligibility/{refNo}':
+    get:
+      tags:
+        - eligibility-api-controller
+      summary: eligibilityRefNoGet
+      description: Check the product eligibility of customer
+      operationId: eligibilityRefNoGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: refNo
+          in: path
+          description: refNo
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Eligibility checked and returned successfully.
+          schema:
+            $ref: '#/definitions/ProductEligibilityResp'
+        '400':
+          description: The request is not a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/Error'
+  /existence:
+    post:
+      tags:
+        - existence-api-controller
+      summary: existencePost
+      description: Retrieve the application reference number by mobile & email
+      operationId: existencePost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: countryCode
+          in: query
+          description: countryCode
+          required: true
+          type: string
+        - name: mobileNo
+          in: query
+          description: mobileNo
+          required: true
+          type: string
+        - name: email
+          in: query
+          description: email
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Saved application successfully
+          schema:
+            $ref: '#/definitions/RefNoResp'
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request
+        '401':
+          description: Unauthorized
+        '403':
+          description: The mobile number is used
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/Error'
+  /existence/email:
+    post:
+      tags:
+        - existence
+      summary: existenceEmailPost
+      description: Check email existence
+      operationId: existenceEmailPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - in: body
+          name: email
+          description: email
+          required: true
+          schema:
+            $ref: '#/definitions/EmailInfo'
+      responses:
+        '200':
+          description: Saved application successfully
+          schema:
+            $ref: '#/definitions/ResponseEntity'
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request
+        '401':
+          description: Unauthorized
+        '403':
+          description: The email is used
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/Error'
+  /existence/mobile:
+    post:
+      tags:
+        - existence
+      summary: existenceMobilePost
+      description: Check mobile number existence
+      operationId: existenceMobilePost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - in: body
+          name: mobileInfo
+          description: mobileInfo
+          required: true
+          schema:
+            $ref: '#/definitions/MobileInfo'
+      responses:
+        '200':
+          description: Saved application successfully
+          schema:
+            $ref: '#/definitions/ResponseEntity'
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request
+        '401':
+          description: Unauthorized
+        '403':
+          description: The mobile number is used
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/Error'
+  /insertMerchantCode:
+    post:
+      tags:
+        - application
+      summary: insertMerchantCode
+      description: insertMerchantCode
+      operationId: insertMerchantCode
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: refereeReferenceNum
+          in: query
+          required: false
+          type: string
+        - name: missionCode
+          in: query
+          required: false
+          type: string
+        - name: refereeRmId
+          in: query
+          required: false
+          type: string
+        - name: merchantCode
+          in: query
+          required: false
+          type: string
+      responses:
+        '200':
+          description: insert sucessfully
+        '201':
+          description: Created
+        '400':
+          description: The request is invalid
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/Error'
+  '/offers/expiryCheck/{refNo}':
+    get:
+      tags:
+        - Campaign
+      summary: offersExpiryCheckRefNoGet
+      description: Check if the selected campaign(s) is/are expired
+      operationId: offersExpiryCheckRefNoGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: refNo
+          in: path
+          description: refNo
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Offers checked and returned successfully.
+          schema:
+            $ref: '#/definitions/CampaignCheckResp'
+        '400':
+          description: The request is invalid
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/Error'
+  '/offers/{refNo}':
+    get:
+      tags:
+        - Campaign
+      summary: offersRefNoGet
+      description: Check the offers of customer
+      operationId: offersRefNoGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: refNo
+          in: path
+          description: refNo
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Offers checked and returned successfully.
+          schema:
+            $ref: '#/definitions/OfferResp'
+        '400':
+          description: The request is invalid
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/Error'
+  '/pib/loginId/{refNo}':
+    get:
+      tags:
+        - pib
+      summary: pibLoginIdRefNoGet
+      description: Get pib loginId
+      operationId: pibLoginIdRefNoGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: refNo
+          in: path
+          description: refNo
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Pib login id retrieved sucessfully
+          schema:
+            $ref: '#/definitions/PibLoginIdResp'
+        '400':
+          description: The request is invalid
+        '401':
+          description: Unauthorized
+        '403':
+          description: The reference number has no login id
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/Error'
+  /pib/reserve:
+    post:
+      tags:
+        - pib
+      summary: pibReservePost
+      description: Reserve pib account
+      operationId: pibReservePost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - in: body
+          name: pibReserveAccountReq
+          description: pibReserveAccountReq
+          required: true
+          schema:
+            $ref: '#/definitions/PibReserveAccountReq'
+      responses:
+        '200':
+          description: Pib account reserved sucessfully
+          schema:
+            $ref: '#/definitions/ResponseEntity'
+        '201':
+          description: Created
+        '400':
+          description: The request is invalid
+        '401':
+          description: Unauthorized
+        '403':
+          description: The account name has been used
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/Error'
+  '/postlogin/status/{rmId}':
+    get:
+      tags:
+        - application
+      summary: postloginStatusRmIdGet
+      description: Retrieve the application status
+      operationId: postloginStatusRmIdGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: rmId
+          in: path
+          description: rmId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Application status retrieved sucessfully
+          schema:
+            $ref: '#/definitions/BundleApplicationPostLoginStatusResp'
+        '400':
+          description: The request is invalid
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/Error'
+  '/rate/{refNo}':
+    post:
+      tags:
+        - rate-api-controller
+      summary: rateRefNoPost
+      description: Rate the customer experience
+      operationId: rateRefNoPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: refNo
+          in: path
+          description: refNo
+          required: true
+          type: string
+        - in: body
+          name: rateReq
+          description: rateReq
+          required: true
+          schema:
+            $ref: '#/definitions/RateReq'
+      responses:
+        '200':
+          description: Rate saved successfully
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/Error'
+  /saveApplication:
+    post:
+      tags:
+        - application
+      summary: saveApplicationPost
+      description: Save the bundle application
+      operationId: saveApplicationPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - in: body
+          name: saveBundleApplicationReq
+          description: saveBundleApplicationReq
+          required: true
+          schema:
+            $ref: '#/definitions/SaveBundleApplicationReq'
+        - name: user-country
+          in: header
+          description: User country
+          required: false
+          type: string
+        - name: x-forwarded-for
+          in: header
+          description: Forwarded ip addresses
+          required: false
+          type: string
+        - name: x-user-agent-id
+          in: header
+          description: Device Id
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Saved application successfully
+          schema:
+            $ref: '#/definitions/SaveBundleApplicationResp'
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/Error'
+    put:
+      tags:
+        - application
+      summary: saveApplicationPut
+      description: Update the bundle application
+      operationId: saveApplicationPut
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - in: body
+          name: saveBundleApplicationReq
+          description: saveBundleApplicationReq
+          required: true
+          schema:
+            $ref: '#/definitions/SaveBundleApplicationReq'
+        - name: user-country
+          in: header
+          description: User country
+          required: false
+          type: string
+        - name: x-forwarded-for
+          in: header
+          description: Forwarded ip addresses
+          required: false
+          type: string
+        - name: x-user-agent-id
+          in: header
+          description: Device Id
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Saved application successfully
+          schema:
+            $ref: '#/definitions/SaveBundleApplicationResp'
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/Error'
+  /submission/rerun:
+    post:
+      tags:
+        - submission-api-controller
+      summary: submissionRerunPost
+      operationId: submissionRerunPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: refNo
+          in: query
+          description: refNo
+          required: false
+          type: string
+        - name: mode
+          in: query
+          description: mode
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Success
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/Error'
+  /wip/info:
+    get:
+      tags:
+        - wip
+      summary: wipInfoGet
+      description: Retrieve the application reference number by mobile & email
+      operationId: wipInfoGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: countryCode
+          in: query
+          description: countryCode
+          required: true
+          type: string
+        - name: mobileNo
+          in: query
+          description: mobileNo
+          required: true
+          type: string
+        - name: email
+          in: query
+          description: email
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Wip search successfully
+          schema:
+            $ref: '#/definitions/WipInfoResp'
+        '400':
+          description: The request is not a valid request
+        '401':
+          description: Unauthorized
+        '403':
+          description: The mobile number is used
+          schema:
+            $ref: '#/definitions/Error'
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  BoAddressInfo:
+    type: object
+    properties:
+      buildingSubType:
+        type: string
+      buildingType:
+        type: string
+      country:
+        type: string
+        description: ISO 2 character country code
+      language:
+        type: string
+        enum:
+          - zh_CN
+          - en_US
+      marking:
+        type: string
+      postalCode:
+        type: string
+      segments:
+        type: object
+        description: 'key-value pair for address segments. key should be address unit per different provider definition. '
+        additionalProperties:
+          type: string
+      source:
+        type: string
+        description: Input address source
+        enum:
+          - MANUAL
+          - EPRC
+          - LOS
+  BoBundleApplicationInfoAddressReopenDetails:
+    type: object
+    properties:
+      reopenTime:
+        type: string
+        format: date-time
+      repoenAddressTypes:
+        type: array
+        items:
+          type: string
+          enum:
+            - Residential
+            - Correspondence
+            - Permanent
+  BoBundleApplicationResp:
+    type: object
+    properties:
+      addressReopenDetails:
+        type: array
+        items:
+          $ref: '#/definitions/BoBundleApplicationInfoAddressReopenDetails'
+      addressRuleCheck:
+        type: string
+      bundleIndicator:
+        type: string
+        description: 'DVI indicator, D - Deposit, V - VCC, I - Investment'
+      bundleMakerCheckerHistory:
+        type: array
+        items:
+          $ref: '#/definitions/MakerCheckerHistoryResp'
+      companyAddressInfo:
+        $ref: '#/definitions/BoAddressInfo'
+      contactAddressSelection:
+        type: string
+      correspondingAddressInfo:
+        $ref: '#/definitions/BoAddressInfo'
+      crsInfo:
+        $ref: '#/definitions/BundleCrsInfo'
+      description:
+        type: string
+      documentInfo:
+        $ref: '#/definitions/BundleDocumentInfo'
+      eaoResult:
+        $ref: '#/definitions/EaoResult'
+      eaoSelected:
+        type: boolean
+        example: false
+      eiaoResult:
+        $ref: '#/definitions/EiaoResult'
+      eiaoSelected:
+        type: boolean
+        example: false
+      employmentInfo:
+        $ref: '#/definitions/BundleEmploymentInfo'
+      eprcCompanyAddressInfo:
+        $ref: '#/definitions/BundleAddressInfo'
+      eprcCorrespondingAddressInfo:
+        $ref: '#/definitions/BundleAddressInfo'
+      eprcPermanentAddressInfo:
+        $ref: '#/definitions/BundleAddressInfo'
+      eprcResidentialAddressInfo:
+        $ref: '#/definitions/BundleAddressInfo'
+      fatcaInfo:
+        $ref: '#/definitions/BundleFatcaInfo'
+      generalInfo:
+        $ref: '#/definitions/BoGeneralInfo'
+      happyFlowQaHistoryResp:
+        type: array
+        items:
+          $ref: '#/definitions/HappyFlowQaHistoryResp'
+      hasLowAccAddrHit:
+        type: boolean
+        example: false
+      hasManualInputName:
+        type: boolean
+        example: false
+      isEditNameHit:
+        type: boolean
+        example: false
+      isRiskScoreFailed:
+        type: boolean
+        example: false
+      lastCheckerAction:
+        type: string
+      lastMakerAction:
+        type: string
+      lastUpdate:
+        type: string
+        format: date-time
+      lowAccAddrHit:
+        type: string
+      marketingPreference:
+        $ref: '#/definitions/BundleMarketingPreference'
+      offerInfo:
+        $ref: '#/definitions/BundleOfferInfo'
+      pageId:
+        type: string
+      permanentAddressInfo:
+        $ref: '#/definitions/BoAddressInfo'
+      permanentAddressSelection:
+        type: string
+      pushLanguage:
+        type: string
+      qaStatus:
+        type: string
+      questionnaireInfo:
+        $ref: '#/definitions/BundleQuestionnaireInfo'
+      refNo:
+        type: string
+        description: Unique application reference number
+      reopenCount:
+        type: integer
+        format: int32
+      residentialAddressInfo:
+        $ref: '#/definitions/BoAddressInfo'
+      riskScoreReason:
+        type: string
+      sourceId:
+        type: string
+      status:
+        type: string
+        description: Application level status
+      submissionDate:
+        type: string
+        format: date-time
+      tspCode:
+        type: string
+      tspEaoStatus:
+        type: string
+      tspEiaoStatus:
+        type: string
+      tspLastStatusUpdateDate:
+        type: string
+        format: date-time
+      tspSegmentStatus:
+        type: string
+      tspUniquekey:
+        type: string
+      tspVccStatus:
+        type: string
+      tspid:
+        type: string
+      uphappyFlowReason:
+        type: string
+      vccInfo:
+        $ref: '#/definitions/BundleVccInfo'
+      vccResult:
+        $ref: '#/definitions/VccResult'
+      vccSelected:
+        type: boolean
+        example: false
+  BoGeneralInfo:
+    type: object
+    properties:
+      boFirstName:
+        type: string
+      boLastName:
+        type: string
+      catfishTransactionId:
+        type: string
+      crsSignoffDate:
+        type: string
+        format: date
+      dateOfBirth:
+        type: string
+      email:
+        type: string
+      engFirstName:
+        type: string
+      engLastName:
+        type: string
+      expenseOnRental:
+        type: string
+      fatcaSignoffDate:
+        type: string
+        format: date
+      gender:
+        type: string
+      homePhone:
+        type: string
+      homePhoneCountryCode:
+        type: string
+      idIssuancePlace:
+        type: string
+      idNo:
+        type: string
+      idType:
+        type: string
+      manualFirstName:
+        type: string
+      manualLastName:
+        type: string
+      mgmReferralCode:
+        type: string
+      mobileCountryCode:
+        type: string
+      mobileNumber:
+        type: string
+      nationalities:
+        type: array
+        items:
+          type: string
+      ocrEngFirstName:
+        type: string
+      ocrEngLastName:
+        type: string
+      officePhone:
+        type: string
+      officePhoneCountryCode:
+        type: string
+      placeOfBirth:
+        type: string
+      rmId:
+        type: string
+      tuConfidenceScore:
+        type: string
+      tuDaResult:
+        type: string
+      tuFacailMatchScore:
+        type: string
+      tuFacialRecognitionScore:
+        type: string
+      tuOverallResult:
+        type: string
+      tuReferenceNumber:
+        type: string
+      tuTamperScore:
+        type: string
+      tuVideoScore:
+        type: string
+  BundleAddressInfo:
+    type: object
+    properties:
+      country:
+        type: string
+        description: ISO 2 character country code
+      language:
+        type: string
+        enum:
+          - zh_CN
+          - en_US
+      postalCode:
+        type: string
+      segments:
+        type: object
+        description: 'key-value pair for address segments. key should be address unit per different provider definition. '
+        additionalProperties:
+          type: string
+      source:
+        type: string
+        description: Input address source
+        enum:
+          - MANUAL
+          - EPRC
+          - LOS
+  BundleApplicationListResp:
+    type: object
+    properties:
+      applications:
+        type: array
+        items:
+          $ref: '#/definitions/BoBundleApplicationResp'
+  BundleApplicationPostLoginStatusResp:
+    type: object
+    properties:
+      eaoRawStatus:
+        type: string
+      eaoStatus:
+        type: string
+        description: 'One of Processing, Approved, Declined'
+      eiaoRawStatus:
+        type: string
+      eiaoStatus:
+        type: string
+        description: 'One of Processing Pending for address verification, Address verification completed, Declined'
+      occupation:
+        type: string
+        description: Occupation of the applicant
+      pibOpened:
+        type: boolean
+        example: false
+      position:
+        type: string
+        description: Position of the applicant
+      profession:
+        type: string
+        description: Profession of the applicant
+      refNo:
+        type: string
+        description: Application reference number
+      status:
+        type: string
+        description: Application level status
+      vccRawStatus:
+        type: string
+      vccStatus:
+        type: string
+        description: 'One of Processing, Pending for documents, Declined, Approved, Canceled'
+  BundleApplicationResp:
+    type: object
+    properties:
+      companyAddressInfo:
+        $ref: '#/definitions/BundleAddressInfo'
+      contactAddressSelection:
+        type: string
+      correspondingAddressInfo:
+        $ref: '#/definitions/BundleAddressInfo'
+      couponCode:
+        type: string
+      crsInfo:
+        $ref: '#/definitions/BundleCrsInfo'
+      documentInfo:
+        $ref: '#/definitions/BundleDocumentInfo'
+      eaoSelected:
+        type: boolean
+        example: false
+      eiaoSelected:
+        type: boolean
+        example: false
+      employmentInfo:
+        $ref: '#/definitions/BundleEmploymentInfo'
+      eprcCompanyAddressInfo:
+        $ref: '#/definitions/BundleAddressInfo'
+      eprcCorrespondingAddressInfo:
+        $ref: '#/definitions/BundleAddressInfo'
+      eprcPermanentAddressInfo:
+        $ref: '#/definitions/BundleAddressInfo'
+      eprcResidentialAddressInfo:
+        $ref: '#/definitions/BundleAddressInfo'
+      fatcaInfo:
+        $ref: '#/definitions/BundleFatcaInfo'
+      generalInfo:
+        $ref: '#/definitions/BundleGeneralInfo'
+      generalStatus:
+        type: string
+      isReward:
+        type: string
+      marketingPreference:
+        $ref: '#/definitions/BundleMarketingPreference'
+      offerInfo:
+        $ref: '#/definitions/BundleOfferInfo'
+      pageId:
+        type: string
+      permanentAddressInfo:
+        $ref: '#/definitions/BundleAddressInfo'
+      permanentAddressSelection:
+        type: string
+      preId:
+        type: string
+      pushLanguage:
+        type: string
+      questionnaireInfo:
+        $ref: '#/definitions/BundleQuestionnaireInfo'
+      refNo:
+        type: string
+        description: Unique application reference number
+      referralCode:
+        type: string
+      residentialAddressInfo:
+        $ref: '#/definitions/BundleAddressInfo'
+      sourceId:
+        type: string
+      status:
+        type: string
+        description: Application level status
+      tspId:
+        type: string
+      vccInfo:
+        $ref: '#/definitions/BundleVccInfo'
+      vccSelected:
+        type: boolean
+        example: false
+  BundleApplicationStatusResp:
+    type: object
+    properties:
+      couponCode:
+        type: string
+      eaoRawStatus:
+        type: string
+      eaoStatus:
+        type: string
+        description: 'One of Processing, Approved, Declined'
+      eiaoRawStatus:
+        type: string
+      eiaoStatus:
+        type: string
+        description: 'One of Processing Pending for address verification, Address verification completed, Declined'
+      pibOpened:
+        type: boolean
+        example: false
+      refNo:
+        type: string
+        description: Application reference number
+      status:
+        type: string
+        description: Application level status
+      tspId:
+        type: string
+      vccRawStatus:
+        type: string
+      vccStatus:
+        type: string
+        description: 'One of Processing, Pending for documents, Declined, Approved, Canceled'
+  BundleCrsInfo:
+    type: object
+    properties:
+      correspondingAddressDiffOtherReason:
+        type: string
+      correspondingAddressDiffReason:
+        type: string
+      nationalityDiffOtherReason:
+        type: string
+      nationalityDiffReason:
+        type: string
+      permanentAddressDiffOtherReason:
+        type: string
+      permanentAddressDiffReason:
+        type: string
+      residentialAddressDiffOtherReason:
+        type: string
+      residentialAddressDiffReason:
+        type: string
+      taxRegions:
+        type: array
+        description: List of Taxed Regions
+        items:
+          $ref: '#/definitions/BundleCrsTaxedRegionInfo'
+    description: Crs information
+  BundleCrsTaxedRegionInfo:
+    type: object
+    properties:
+      country:
+        type: string
+      reason:
+        type: string
+      tin:
+        type: string
+    description: Taxed region
+  BundleDocumentInfo:
+    type: object
+    properties:
+      addressProofRefNo:
+        type: string
+        description: The reference number retrieved from file upload
+      incomeProofRefNo:
+        type: string
+        description: The reference number retrieved from file upload
+      passportCopyRefNo:
+        type: string
+        description: The reference number retrieved from file upload
+      studentCardRefNo:
+        type: string
+        description: The reference number retrieved from file upload
+  BundleEmploymentInfo:
+    type: object
+    properties:
+      companyName:
+        type: string
+      educationLevel:
+        type: string
+      faculty:
+        type: string
+      industry:
+        type: string
+      isSelfEmployed:
+        type: boolean
+        example: false
+      monthAtProfession:
+        type: string
+      monthOfPosition:
+        type: string
+      monthlyIncome:
+        type: string
+      occupation:
+        type: string
+      overHalfIncomeSourceFromPRC:
+        type: boolean
+        example: false
+      position:
+        type: string
+      profession:
+        type: string
+      university:
+        type: string
+      yearAtProfession:
+        type: string
+      yearOfGraduation:
+        type: string
+      yearOfPosition:
+        type: string
+    description: Employment Information
+  BundleFatcaInfo:
+    type: object
+    properties:
+      fatcaIndicator:
+        type: boolean
+        example: false
+      fatcaTin:
+        type: string
+      isBackupWithholding:
+        type: boolean
+        example: false
+  BundleGeneralInfo:
+    type: object
+    properties:
+      dateOfBirth:
+        type: string
+      email:
+        type: string
+      engFirstName:
+        type: string
+      engLastName:
+        type: string
+      expenseOnRental:
+        type: string
+      gender:
+        type: string
+      homePhone:
+        type: string
+      homePhoneCountryCode:
+        type: string
+      idNo:
+        type: string
+      idType:
+        type: string
+      mobileCountryCode:
+        type: string
+      mobileNumber:
+        type: string
+      nationalities:
+        type: array
+        items:
+          type: string
+      ocrEngFirstName:
+        type: string
+      ocrEngLastName:
+        type: string
+      officePhone:
+        type: string
+      officePhoneCountryCode:
+        type: string
+      placeOfBirth:
+        type: string
+    description: General Info
+  BundleMarketingPreference:
+    type: object
+    properties:
+      optoutDirectMarketing:
+        type: boolean
+        example: false
+      optoutDirectMarketingEmail:
+        type: boolean
+        example: false
+      optoutDirectMarketingPhone:
+        type: boolean
+        example: false
+      optoutDirectMarketingPost:
+        type: boolean
+        example: false
+      optoutDirectMarketingSMS:
+        type: boolean
+        example: false
+      optoutDirectMarketingThirdParty:
+        type: boolean
+        example: false
+  BundleOfferInfo:
+    type: object
+    properties:
+      bundleGifts:
+        type: array
+        items:
+          $ref: '#/definitions/Gift'
+      eaoGifts:
+        type: array
+        items:
+          $ref: '#/definitions/Gift'
+      eiaoGifts:
+        type: array
+        items:
+          $ref: '#/definitions/Gift'
+      vccGifts:
+        type: array
+        items:
+          $ref: '#/definitions/Gift'
+    description: Gift code(s) for each product
+  BundleQuestionnaireInfo:
+    type: object
+    properties:
+      acctOpeningPurpose:
+        type: string
+      sourceOfFund:
+        type: string
+    description: Questionnaire respnoses
+  BundleVccInfo:
+    type: object
+    properties:
+      hasDeclarationOfRelationship:
+        type: boolean
+        example: false
+      isExceedCreditLimit:
+        type: boolean
+        example: false
+      nameOfRelatedStaff:
+        type: string
+      relationshipWithStaff:
+        type: string
+    description: Bundle Vcc Information
+  CampaignCheckResp:
+    type: object
+    properties:
+      bundleValid:
+        type: boolean
+        example: false
+      eaoValid:
+        type: boolean
+        example: false
+      eiaoValid:
+        type: boolean
+        example: false
+      vccValid:
+        type: boolean
+        example: false
+  CheckerActionReq:
+    type: object
+    properties:
+      action:
+        type: string
+        description: Checker decision action
+        enum:
+          - Confirm
+          - BackToMaker
+      checker:
+        type: string
+        description: checker name
+      checkerType:
+        type: string
+        enum:
+          - DB
+      remark:
+        type: string
+        description: remark for checker
+  EaoResult:
+    type: object
+    properties:
+      checkListTypes:
+        type: array
+        items:
+          type: string
+          enum:
+            - Aml
+            - Bankcruptcy
+            - RejoinName
+      lastCheckerUpdatedTime:
+        type: string
+        format: date-time
+        description: Last checker updated time
+      lastMakerUpdatedTime:
+        type: string
+        format: date-time
+        description: Last maker updated time
+      lastUpdatedChecker:
+        type: string
+        description: Last updated checker name
+      lastUpdatedMaker:
+        type: string
+        description: Last updated maker name
+      qaResult:
+        $ref: '#/definitions/QaResult'
+      rejectReason:
+        type: string
+        description: eAO reject reason
+      remark:
+        type: string
+        description: Remarks on eAO
+      status:
+        type: string
+        description: eAO application status
+      subStatus:
+        type: string
+        description: eAO application sub-status
+  EiaoResult:
+    type: object
+    properties:
+      rejectReason:
+        type: string
+        description: eIAO reject reason
+      status:
+        type: string
+        description: eIAO application status
+  EkycBindingReq:
+    type: object
+    properties:
+      idCheckResult:
+        $ref: '#/definitions/IdCheckResult'
+  Eligibility:
+    type: object
+    properties:
+      eaoEligible:
+        type: boolean
+        example: false
+      eiaoEligible:
+        type: boolean
+        example: false
+      vccEligible:
+        type: boolean
+        example: false
+  EmailInfo:
+    type: object
+    properties:
+      email:
+        type: string
+  Error:
+    type: object
+    required:
+      - logref
+      - message
+    properties:
+      _links:
+        $ref: '#/definitions/ErrorLink'
+      logref:
+        type: string
+        description: The error code and reference for the error
+      message:
+        type: string
+        description: The description for the error
+      path:
+        type: string
+        description: For expressing a JSON Pointer (RFC6901) to a field in related resource (contained in the 'about' link relation) that this error is relevant for.
+  ErrorLink:
+    type: object
+    properties:
+      about:
+        $ref: '#/definitions/Href'
+      describes:
+        $ref: '#/definitions/Href'
+      help:
+        $ref: '#/definitions/Href'
+  Gift:
+    type: object
+    properties:
+      campaignCode:
+        type: string
+      giftCode:
+        type: string
+  HappyFlowQaHistoryResp:
+    type: object
+    properties:
+      maker:
+        type: string
+      makerDecision:
+        type: string
+      makerType:
+        type: string
+      makerUpdateTime:
+        type: string
+        format: date-time
+      qaResult:
+        $ref: '#/definitions/QaResult'
+      updatedFields:
+        $ref: '#/definitions/MakerCheckerHistoryRespUpdatedFields'
+  Href:
+    type: object
+    properties:
+      href:
+        type: string
+        description: The URL
+  IdCheckResult:
+    type: object
+    properties:
+      ageValid:
+        type: boolean
+        example: false
+        description: Indicate fulfill age requirement
+      confidenceScore:
+        type: string
+      daResult:
+        type: string
+      dob:
+        type: string
+        description: date of birth
+      dobSymbols:
+        type: string
+        description: DOB Symbols
+      documentNumber:
+        type: string
+        description: Document Numbers
+      facialMatchScore:
+        type: string
+      frScore:
+        type: string
+      fullName:
+        type: string
+        description: Full Name
+      gender:
+        type: string
+        description: Gender
+      hkid:
+        type: boolean
+        example: false
+        description: Indicate the ID issuer is HKG
+      idAddress:
+        type: string
+        description: Id Address
+      idExpirationDate:
+        type: string
+        description: Id Expiration Date
+      idIssueDate:
+        type: string
+        description: Id Issue Date
+      issueType:
+        type: string
+        description: Issue Type
+      issuerCode:
+        type: string
+        description: Issuer Code
+      issuerName:
+        type: string
+        description: Catfish Id issuer name
+      overallResult:
+        type: string
+      permHkid:
+        type: boolean
+        example: false
+        description: Indicate the ID is permanent ID
+      tamperScore:
+        type: string
+      transactionId:
+        type: string
+        description: Catfish transaction Id
+      valid:
+        type: boolean
+        example: false
+        description: ID document validation
+      videoScore:
+        type: string
+  MakerActionReq:
+    type: object
+    properties:
+      maker:
+        type: string
+        description: Maker name
+      makerType:
+        type: string
+        description: makerType
+        enum:
+          - DB
+      proposedDecision:
+        type: string
+        description: Proposed decision from maker
+        enum:
+          - Approve
+          - Reject
+          - Reopen
+      qaResult:
+        $ref: '#/definitions/QaResult'
+      remark:
+        type: string
+      reopenAddressTypes:
+        type: array
+        items:
+          type: string
+          enum:
+            - Residential
+            - Correspondence
+            - Permanent
+      updatedFirstName:
+        type: string
+        description: 'updated first name from maker, no update if null or empty'
+      updatedLastName:
+        type: string
+        description: 'updated last name from maker, no update if null or empty'
+  MakerCheckerHistoryResp:
+    type: object
+    properties:
+      checker:
+        type: string
+      checkerDecision:
+        type: string
+      checkerRemark:
+        type: string
+      checkerType:
+        type: string
+      checkerUpdateTime:
+        type: string
+        format: date-time
+      maker:
+        type: string
+      makerDecision:
+        type: string
+      makerRemark:
+        type: string
+      makerType:
+        type: string
+      makerUpdateTime:
+        type: string
+        format: date-time
+      qaResult:
+        $ref: '#/definitions/QaResult'
+      repoenAddressTypes:
+        type: array
+        items:
+          type: string
+          enum:
+            - Residential
+            - Correspondence
+            - Permanent
+      updatedFields:
+        $ref: '#/definitions/MakerCheckerHistoryRespUpdatedFields'
+  MakerCheckerHistoryRespUpdatedFields:
+    type: object
+    properties:
+      firstName:
+        type: string
+      lastName:
+        type: string
+  MobileInfo:
+    type: object
+    properties:
+      countryCode:
+        type: string
+      mobileNo:
+        type: string
+  Offer:
+    type: object
+    properties:
+      campaignCode:
+        type: string
+      cardType:
+        type: string
+      gifts:
+        type: array
+        items:
+          $ref: '#/definitions/Gift'
+      merchantCampaign:
+        type: boolean
+        example: false
+      product:
+        type: string
+    description: offer
+  OfferResp:
+    type: object
+    properties:
+      campaigns:
+        type: array
+        items:
+          $ref: '#/definitions/Offer'
+      customerType:
+        type: string
+      eligibility:
+        $ref: '#/definitions/Eligibility'
+    description: Response for offer check
+  PibLoginIdResp:
+    type: object
+    properties:
+      loginId:
+        type: string
+        description: pib login id
+  PibReserveAccountReq:
+    type: object
+    properties:
+      password:
+        type: string
+      refNo:
+        type: string
+      userName:
+        type: string
+  ProductEligibilityResp:
+    type: object
+    properties:
+      eaoEligible:
+        type: boolean
+        example: false
+      eiaoEligible:
+        type: boolean
+        example: false
+      vccEligible:
+        type: boolean
+        example: false
+  QaResult:
+    type: object
+    properties:
+      aossBpmNo:
+        type: string
+      idCard:
+        $ref: '#/definitions/QaResultIdCard'
+      ocr:
+        $ref: '#/definitions/QaResultOcr'
+      selfie:
+        $ref: '#/definitions/QaResultSelfie'
+      verifiedDateOfBirth:
+        type: string
+      verifiedGender:
+        type: string
+      verifiedHkdNo:
+        type: string
+      verifiedPlaceOfBirth:
+        type: string
+      yearOnlyDate:
+        type: string
+      yearOnlyFlag:
+        type: string
+    description: QA results
+  QaResultIdCard:
+    type: object
+    properties:
+      hkPermId:
+        type: boolean
+        example: false
+  QaResultOcr:
+    type: object
+    properties:
+      birthPlace:
+        type: boolean
+        example: false
+      dob:
+        type: boolean
+        example: false
+      gender:
+        type: boolean
+        example: false
+      idNo:
+        type: boolean
+        example: false
+      name:
+        type: boolean
+        example: false
+  QaResultSelfie:
+    type: object
+    properties:
+      age:
+        type: boolean
+        example: false
+      facialMark:
+        type: boolean
+        example: false
+      gender:
+        type: boolean
+        example: false
+      other:
+        type: boolean
+        example: false
+      race:
+        type: boolean
+        example: false
+      selfieAppearance:
+        type: boolean
+        example: false
+  RateReq:
+    type: object
+    properties:
+      isSatisfied:
+        type: boolean
+        example: false
+      reason:
+        type: string
+  RefNoResp:
+    type: object
+    properties:
+      creationDate:
+        type: string
+      refNo:
+        type: string
+  ResponseEntity:
+    type: object
+    properties:
+      body:
+        type: object
+      statusCode:
+        type: string
+        enum:
+          - '100'
+          - '101'
+          - '102'
+          - '103'
+          - '200'
+          - '201'
+          - '202'
+          - '203'
+          - '204'
+          - '205'
+          - '206'
+          - '207'
+          - '208'
+          - '226'
+          - '300'
+          - '301'
+          - '302'
+          - '303'
+          - '304'
+          - '305'
+          - '307'
+          - '308'
+          - '400'
+          - '401'
+          - '402'
+          - '403'
+          - '404'
+          - '405'
+          - '406'
+          - '407'
+          - '408'
+          - '409'
+          - '410'
+          - '411'
+          - '412'
+          - '413'
+          - '414'
+          - '415'
+          - '416'
+          - '417'
+          - '418'
+          - '419'
+          - '420'
+          - '421'
+          - '422'
+          - '423'
+          - '424'
+          - '426'
+          - '428'
+          - '429'
+          - '431'
+          - '451'
+          - '500'
+          - '501'
+          - '502'
+          - '503'
+          - '504'
+          - '505'
+          - '506'
+          - '507'
+          - '508'
+          - '509'
+          - '510'
+          - '511'
+      statusCodeValue:
+        type: integer
+        format: int32
+  SaveBundleApplicationReq:
+    type: object
+    properties:
+      addressRuleCheck:
+        type: string
+      companyAddressInfo:
+        $ref: '#/definitions/BundleAddressInfo'
+      contactAddressSelection:
+        type: string
+      correspondingAddressInfo:
+        $ref: '#/definitions/BundleAddressInfo'
+      couponCode:
+        type: string
+      crsInfo:
+        $ref: '#/definitions/BundleCrsInfo'
+      eaoSelected:
+        type: boolean
+        example: false
+      eiaoSelected:
+        type: boolean
+        example: false
+      employmentInfo:
+        $ref: '#/definitions/BundleEmploymentInfo'
+      eprcCompanyAddressInfo:
+        $ref: '#/definitions/BundleAddressInfo'
+      eprcCorrespondingAddressInfo:
+        $ref: '#/definitions/BundleAddressInfo'
+      eprcPermanentAddressInfo:
+        $ref: '#/definitions/BundleAddressInfo'
+      eprcResidentialAddressInfo:
+        $ref: '#/definitions/BundleAddressInfo'
+      fatcaInfo:
+        $ref: '#/definitions/BundleFatcaInfo'
+      generalInfo:
+        $ref: '#/definitions/BundleGeneralInfo'
+      generalStatus:
+        type: string
+      isReward:
+        type: string
+      marketingPreference:
+        $ref: '#/definitions/BundleMarketingPreference'
+      offerInfo:
+        $ref: '#/definitions/BundleOfferInfo'
+      pageId:
+        type: string
+      permanentAddressInfo:
+        $ref: '#/definitions/BundleAddressInfo'
+      permanentAddressSelection:
+        type: string
+      preId:
+        type: string
+      pushLanguage:
+        type: string
+      questionnaireInfo:
+        $ref: '#/definitions/BundleQuestionnaireInfo'
+      refNo:
+        type: string
+        description: Unique application reference number
+      referralCode:
+        type: string
+      residentialAddressInfo:
+        $ref: '#/definitions/BundleAddressInfo'
+      sourceId:
+        type: string
+      tspId:
+        type: string
+      tspRemark:
+        type: string
+      vccInfo:
+        $ref: '#/definitions/BundleVccInfo'
+      vccSelected:
+        type: boolean
+        example: false
+  SaveBundleApplicationResp:
+    type: object
+    properties:
+      creationDate:
+        type: string
+        description: Application creation time
+      refNo:
+        type: string
+        description: Application reference number
+  VccResult:
+    type: object
+    properties:
+      approvedDate:
+        type: string
+        format: date
+      status:
+        type: string
+        description: Vcc application status
+  WipInfoResp:
+    type: object
+    properties:
+      appType:
+        type: string
+        description: EAO/VCC
+      firstName:
+        type: string
+      lastName:
+        type: string
+      rawStatus:
+        type: string
+        description: Raw Application status
+      refNo:
+        type: string
+        description: Application reference number
+      status:
+        type: string
+        description: Mapped Frontend Application status

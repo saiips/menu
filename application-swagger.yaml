@@ -1,0 +1,4170 @@
+swagger: '2.0'
+info:
+  description: Application Related APIs
+  version: 1.0.0
+  title: Application
+  contact: {}
+host: 'localhost:8082'
+basePath: /directbank/application/v1
+tags:
+  - name: applications-api-controller
+    description: the applications API
+  - name: eligibility-api-controller
+    description: the eligibility API
+  - name: customer-definition-api-controller
+    description: the customerDefinition API
+  - name: eao-api-controller
+    description: the eao API
+  - name: prc-api-controller
+    description: the prc API
+  - name: vcc-api-controller
+    description: the vcc API
+  - name: rm-account-relationship-api-controller
+    description: the RmAccountRelationship API
+  - name: retrieve-application-api-controller
+    description: the retrieveApplication API
+  - name: save-application-api-controller
+    description: the saveApplication API
+paths:
+  /applications:
+    get:
+      tags:
+        - application
+      summary: Retrieve list of basis info in application form
+      description: This API is to retrieve list of basis info of application forms by inputting different parameters. The list is srted by the submission date.
+      operationId: applicationsGetUsingGET
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: submitDateFrom
+          in: query
+          description: To retrieve application form with submission date from input parameter. The format is yyyy-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: submitDateTo
+          in: query
+          description: To retrieve application form with submission date to input parameter.
+          required: false
+          type: string
+          format: date
+        - name: countryCode
+          in: query
+          description: To retrieve application form with input country code.
+          required: false
+          type: string
+        - name: mobileNo
+          in: query
+          description: To retrieve application form with input mobile number.
+          required: false
+          type: string
+        - name: email
+          in: query
+          description: To retrieve application form with input email.
+          required: false
+          type: string
+        - name: refId
+          in: query
+          description: To retrieve application form with input application reference id.
+          required: false
+          type: string
+        - name: id
+          in: query
+          description: To retrieve application form with input customer identity number.
+          required: false
+          type: string
+        - name: status
+          in: query
+          description: To retrieve application form with input status.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: lastUpdateFrom
+          in: query
+          description: To retrieve application form with submission date from input parameter. The format is yyyy-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: lastUpdateTo
+          in: query
+          description: To retrieve application form with submission date to input parameter.
+          required: false
+          type: string
+          format: date
+        - name: pageSize
+          in: query
+          description: To indicate the number of forms return per time.
+          required: false
+          type: string
+        - name: pageIdx
+          in: query
+          description: To indicate the page index for returning forms.
+          required: false
+          type: string
+        - name: mode
+          in: query
+          description: 'To determine the level of details of application from. When value = full, this interface returns list of detailed application form. When value = simple, this interface returns list of summarized application form.'
+          required: false
+          type: string
+          default: simple
+      responses:
+        '200':
+          description: The application form summary is returned successfully
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/DetailApplicationForm'
+        '400':
+          description: The request is not a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/applications/{refId}':
+    get:
+      tags:
+        - application
+      summary: Retrieve detailed info in application form
+      description: This API is to retrieve detailed info of application form by inputting application reference number
+      operationId: applicationsRefIdGetUsingGET
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: refId
+          in: path
+          description: To retrieve application form with input application reference number.
+          required: true
+          type: string
+      responses:
+        '200':
+          description: The application form summary is returned successfully
+          schema:
+            $ref: '#/definitions/DetailApplicationForm'
+        '400':
+          description: The request is not a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    put:
+      tags:
+        - application
+      summary: Update application form summary info by application reference number.
+      description: 'This API is to update basis info, for example, status, in application form.'
+      operationId: applicationsRefIdPutUsingPUT
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: refId
+          in: path
+          description: To update application form with input application reference number.
+          required: true
+          type: string
+        - in: body
+          name: applicationSummaryUpdateReq
+          description: JSON request object.
+          required: true
+          schema:
+            $ref: '#/definitions/ApplicationSummaryUpdateReq'
+      responses:
+        '200':
+          description: The application form summary is updated successfully
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/applications/{refId}/checkerAction':
+    post:
+      tags:
+        - application
+      summary: Checker Action
+      operationId: applicationsRefIdCheckerActionPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: refId
+          in: path
+          description: To update application form with input application reference number.
+          required: true
+          type: string
+        - in: body
+          name: checkerActionReq
+          description: JSON request object.
+          required: true
+          schema:
+            $ref: '#/definitions/CheckerActionReq'
+      responses:
+        '200':
+          description: The application form summary is updated successfully
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/applications/{refId}/makerAction':
+    post:
+      tags:
+        - application
+      summary: Maker Action
+      operationId: applicationsRefIdMakerActionPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: refId
+          in: path
+          description: To update application form with input application reference number.
+          required: true
+          type: string
+        - in: body
+          name: makerActionReq
+          description: JSON request object.
+          required: true
+          schema:
+            $ref: '#/definitions/MakerActionReq'
+      responses:
+        '200':
+          description: The application form summary is updated successfully
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/customerDefinition/{idNo}':
+    get:
+      tags:
+        - application
+      summary: Retrieve customer definition
+      description: This API is to retrieve customer definition
+      operationId: customerDefinitionIdNoGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: idNo
+          in: path
+          description: To retrieve customer definition with idNo
+          required: true
+          type: string
+      responses:
+        '200':
+          description: The customer definition is returned successfully
+          schema:
+            $ref: '#/definitions/CustomerDefinitionResp'
+        '400':
+          description: The request is not a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /eao/pibAccount:
+    post:
+      tags:
+        - PIB
+      summary: Create pib account
+      description: 'Create pib account '
+      operationId: eaoPibAccountPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - in: body
+          name: pibAccountCreateReq
+          description: Request message for Pib Account Creation
+          required: true
+          schema:
+            $ref: '#/definitions/PibAccountCreateReq'
+      responses:
+        '200':
+          description: The request is served successfully.
+          schema:
+            $ref: '#/definitions/PibAccountCreateResp'
+        '201':
+          description: Created
+        '400':
+          description: User agent did not provide a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /eligibility/cncb:
+    get:
+      tags:
+        - eligibility
+      summary: Get the CNCB eligibility checking result
+      operationId: eligibilityCncbGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: idNo
+          in: query
+          description: PRC ID No
+          required: true
+          type: string
+        - name: name
+          in: query
+          description: Applicant's Name
+          required: true
+          type: string
+        - name: cncbAccountNo
+          in: query
+          description: CNCB Account No (Debit Card No)
+          required: true
+          type: string
+      responses:
+        '200':
+          description: The checking result is returned successfully
+          schema:
+            $ref: '#/definitions/CncbEligibilityResp'
+        '400':
+          description: User agent did not provide a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /prc/application:
+    get:
+      tags:
+        - PRC ID
+      summary: Get PRC ID application for one applicant
+      operationId: prcApplicationGet_1
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: email
+          in: query
+          description: Applicant's email
+          required: false
+          type: string
+        - name: countryCode
+          in: query
+          description: Country code of applicant's mobile number
+          required: false
+          type: string
+        - name: mobile
+          in: query
+          description: Applicant's mobile number
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Successfully submitted application
+          schema:
+            $ref: '#/definitions/PrcApplication'
+        '400':
+          description: User agent did not provide a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    post:
+      tags:
+        - PRC ID
+      summary: Create PRC EAO application
+      operationId: prcApplicationPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - in: body
+          name: prcCreateAppReq
+          description: prcCreateAppReq
+          required: true
+          schema:
+            $ref: '#/definitions/PrcCreateAppReq'
+      responses:
+        '200':
+          description: PRC ID eao application is successfully created
+          schema:
+            $ref: '#/definitions/PrcCreateAppResp'
+        '201':
+          description: PRC ID eao application with same request info was created before
+          schema:
+            $ref: '#/definitions/PrcCreateAppResp'
+        '400':
+          description: User agent did not provide a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /prc/application/:
+    get:
+      tags:
+        - PRC ID
+      summary: Get list of detailed PRC ID applications
+      description: Retrieve list of detailed PRC ID applications by inputting different parameters sorted by the submission date.
+      operationId: prcApplicationGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: submit-from
+          in: query
+          description: With submission date since input parameter as of yyyy-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: submit-to
+          in: query
+          description: With submission date before input parameter as of yyyy-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: country-code
+          in: query
+          description: With input mobile number's country code
+          required: false
+          type: string
+        - name: mobile
+          in: query
+          description: With input mobile number
+          required: false
+          type: string
+        - name: email
+          in: query
+          description: With input email
+          required: false
+          type: string
+        - name: ref-no
+          in: query
+          description: With input application reference number
+          required: false
+          type: string
+        - name: id-no
+          in: query
+          description: With input PRC Resident ID Card number
+          required: false
+          type: string
+        - name: status
+          in: query
+          description: With input status(es)
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+        - name: update-from
+          in: query
+          description: With last update date since input parameter as of yyyy-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: update-to
+          in: query
+          description: With last update date before input parameter as of yyyy-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: ocr-verification
+          in: query
+          description: With CBIC OCR verfication status
+          required: false
+          type: string
+          enum:
+            - pass
+            - fail
+            - 'null'
+        - name: size
+          in: query
+          description: Indicate the number of applications return per time
+          required: false
+          type: string
+        - name: page
+          in: query
+          description: Indicate the page index for returning application
+          required: false
+          type: string
+        - name: mode
+          in: query
+          description: 'Indicate the level of detail disclosure. Returns list of detailed application when "full", list of summarized application when "simple".'
+          required: false
+          type: string
+          default: simple
+      responses:
+        '200':
+          description: The application form summary is returned successfully
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/PrcApplicationDetail'
+        '400':
+          description: The request is not a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/prc/application/detail/{dbRefId}':
+    get:
+      tags:
+        - PRC ID
+      summary: Retrieve a detailed PRC ID applications
+      description: This API is to retrieve detailed info of PRC application by inputting application reference number
+      operationId: prcApplicationDetailDbRefIdGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: dbRefId
+          in: path
+          description: To retrieve application with input application reference number.
+          required: true
+          type: string
+      responses:
+        '200':
+          description: The application form summary is returned successfully
+          schema:
+            $ref: '#/definitions/PrcApplicationDetail'
+        '400':
+          description: The request is not a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/prc/application/doc/{dbRefId}':
+    post:
+      tags:
+        - PRC ID
+      summary: Notify an ekyc action after submitting application and update PRC ID document status to uploaded
+      operationId: prcApplicationDocDbRefIdPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: x-ekyc-jwt
+          in: header
+          description: The JWT token from eKYC action
+          required: true
+          type: string
+        - name: dbRefId
+          in: path
+          description: dbRefId
+          required: true
+          type: string
+        - in: body
+          name: prcApplicationDocReq
+          description: prcApplicationDocReq
+          required: true
+          schema:
+            $ref: '#/definitions/PrcApplicationDocReq'
+      responses:
+        '200':
+          description: Successfully submitted application
+        '201':
+          description: Created
+        '400':
+          description: User agent did not provide a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/prc/application/draft/{dbRefId}':
+    post:
+      tags:
+        - PRC ID
+      summary: Update PRC ID application draft
+      operationId: prcApplicationDraftDbRefIdPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: dbRefId
+          in: path
+          description: dbRefId
+          required: true
+          type: string
+        - in: body
+          name: prcApplicationDraft
+          description: prcApplicationDraft
+          required: true
+          schema:
+            $ref: '#/definitions/PrcApplicationDraft'
+      responses:
+        '200':
+          description: Successfully update application draft content
+        '201':
+          description: Created
+        '400':
+          description: User agent did not provide a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/prc/application/ekyc/{method}':
+    post:
+      tags:
+        - PRC ID
+      summary: 'Update PRC EAO application to eKYC passed, create application if prospect is not needed'
+      operationId: prcApplicationEkycMethodPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: method
+          in: path
+          description: method
+          required: true
+          type: string
+          enum:
+            - '"catfish"'
+            - '"pat"'
+            - '"eid"'
+        - in: body
+          name: prcApplicationEkycReq
+          description: prcApplicationEkycReq
+          required: true
+          schema:
+            $ref: '#/definitions/PrcApplicationEkycReq'
+        - name: x-ekyc-jwt
+          in: header
+          description: The JWT token from eKYC action
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Successfully update application to eKYC finished and return everything obtained during eKYC with the schema of an application
+          schema:
+            $ref: '#/definitions/PrcApplication'
+        '201':
+          description: Created
+        '400':
+          description: User agent did not provide a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /prc/application/existence:
+    get:
+      tags:
+        - PRC ID
+      summary: Check if given mobile or email has existed PIB
+      description: 'Check if given mobile or email has existed PIB '
+      operationId: prcApplicationExistenceGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: countryCode
+          in: query
+          description: Mobile country code
+          required: false
+          type: string
+        - name: mobile
+          in: query
+          description: Mobile number
+          required: false
+          type: string
+        - name: email
+          in: query
+          description: Email
+          required: false
+          type: string
+      responses:
+        '200':
+          description: The request is served successfully. Mobile & email pair have exist application.
+          schema:
+            $ref: '#/definitions/PrcExistenceResp'
+        '400':
+          description: User agent did not provide a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/prc/application/ocr/{dbRefId}':
+    post:
+      tags:
+        - PRC ID
+      summary: Update PRC EAO application to ocr captured status
+      operationId: prcApplicationOcrDbRefIdPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: dbRefId
+          in: path
+          description: dbRefId
+          required: true
+          type: string
+        - in: body
+          name: prcApplicationOcrReq
+          description: prcApplicationOcrReq
+          required: true
+          schema:
+            $ref: '#/definitions/PrcApplicationOcrReq'
+        - name: x-ekyc-jwt
+          in: header
+          description: The JWT token from eKYC action
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Successfully update application to OCR captured
+        '201':
+          description: Created
+        '400':
+          description: User agent did not provide a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/prc/application/submitted/{dbRefId}':
+    post:
+      tags:
+        - PRC ID
+      summary: Submit PRC ID application
+      operationId: prcApplicationSubmittedDbRefIdPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: dbRefId
+          in: path
+          description: dbRefId
+          required: true
+          type: string
+        - in: body
+          name: prcApplicationSubmitReq
+          description: prcApplicationSubmitReq
+          required: true
+          schema:
+            $ref: '#/definitions/PrcApplicationDraft'
+        - name: x-gps-latitude
+          in: header
+          description: Latitude of GPS (in Google/Tencent's coordinate system) when the request is called
+          required: false
+          type: string
+        - name: x-gps-longitude
+          in: header
+          description: Longitude of GPS (in Google/Tencent's coordinate system) when the request is called
+          required: false
+          type: string
+        - name: user-country
+          in: header
+          description: 'Country of the GeoIP result, inserted by CA'
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Successfully submitted application
+          schema:
+            $ref: '#/definitions/PrcSubmitAppResp'
+        '201':
+          description: Created
+        '400':
+          description: User agent did not provide a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/prc/application/{dbRefId}':
+    get:
+      tags:
+        - PRC ID
+      summary: Get PRC ID application
+      operationId: prcApplicationDbRefIdGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: dbRefId
+          in: path
+          description: dbRefId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successfully submitted application
+          schema:
+            $ref: '#/definitions/PrcApplication'
+        '400':
+          description: User agent did not provide a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/prc/application/{dbRefId}/address/':
+    get:
+      tags:
+        - PRC ID
+      summary: Get all formatted addresses of a PRC ID application
+      operationId: prcApplicationDbRefIdAddressGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: dbRefId
+          in: path
+          description: dbRefId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Addresses successfully concat-ed and romanized
+          schema:
+            $ref: '#/definitions/AddressesResp'
+        '400':
+          description: User agent did not provide a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/prc/application/{dbRefId}/address/romanization/':
+    get:
+      tags:
+        - PRC ID
+      summary: Get the romanized addresses of a PRC ID application
+      operationId: prcApplicationDbRefIdAddressRomanizationGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: dbRefId
+          in: path
+          description: dbRefId
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Addresses successfully romanized
+          schema:
+            $ref: '#/definitions/Addresses'
+        '400':
+          description: User agent did not provide a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: true
+  /prc/landing:
+    get:
+      tags:
+        - PRC ID
+      summary: Get PRC EAO landing info
+      operationId: prcLandingGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: x-gps-latitude
+          in: header
+          description: 'Latitude of GPS (in Google/Tencent''s coordinate system) when the request is called, no need for Phase 0'
+          required: false
+          type: string
+        - name: x-gps-longitude
+          in: header
+          description: 'Longitude of GPS (in Google/Tencent''s coordinate system) when the request is called, no need for Phase 0'
+          required: false
+          type: string
+      responses:
+        '200':
+          description: 'Landing successfully, PRC ID eao function is valid for customer'
+          schema:
+            $ref: '#/definitions/PrcLandingResp'
+        '400':
+          description: User agent did not provide a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/prc/pib/loginId/{refNo}':
+    get:
+      tags:
+        - Pib
+      summary: prcPibLoginIdRefNoGet
+      description: Get pib loginId
+      operationId: prcPibLoginIdRefNoGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: refNo
+          in: path
+          description: refNo
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Pib login id retrieved sucessfully
+          schema:
+            $ref: '#/definitions/PibLoginIdResp'
+        '400':
+          description: The request is invalid
+        '401':
+          description: Unauthorized
+        '403':
+          description: The reference number has no login id
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/Error'
+  /prc/postal:
+    get:
+      tags:
+        - PRC ID
+      summary: Get postal code of a PRC district
+      operationId: prcPostalGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: id
+          in: query
+          description: 'District ID, optional'
+          required: false
+          type: string
+        - name: province
+          in: query
+          description: Province name
+          required: false
+          type: string
+        - name: city
+          in: query
+          description: City name
+          required: false
+          type: string
+        - name: district
+          in: query
+          description: District name
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Postal code found
+          schema:
+            $ref: '#/definitions/PrcPostalResp'
+        '400':
+          description: User agent did not provide a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /prc/rerunApplication:
+    post:
+      tags:
+        - ReRun Application
+      summary: Rerun Prc Account Opening Application
+      description: 'Rerun Prc Account Opening Application '
+      operationId: prcRerunApplicationPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - in: body
+          name: reRunPrcApplicationReq
+          description: JSON request object.
+          required: true
+          schema:
+            $ref: '#/definitions/ReRunPrcApplicationReq'
+      responses:
+        '200':
+          description: The application has saved successfully
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /prc/romanization/:
+    post:
+      tags:
+        - PRC ID
+      summary: Romanize given strings in Chinese to Pinyin
+      operationId: prcRomanizationPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - in: body
+          name: prcRomanizationReq
+          description: 'Romanization requests, one per each line.'
+          required: true
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: 'Romanization results, one per each line.'
+          schema:
+            type: array
+            items:
+              type: string
+        '201':
+          description: Created
+        '400':
+          description: User agent did not provide a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: true
+  /retrieveApplication:
+    post:
+      tags:
+        - Account Opening
+      summary: Retrieve EAO Account Opening Application
+      description: 'Retrieve EAO Account Opening Application '
+      operationId: retrieveApplicationPostUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - in: body
+          name: retrieveApplicationRequest
+          description: JSON request object.
+          required: true
+          schema:
+            $ref: '#/definitions/RetrieveApplicationRequest'
+      responses:
+        '200':
+          description: The result has been returned to user successfully
+          schema:
+            $ref: '#/definitions/RetrieveApplicationResponse'
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request.
+          schema:
+            $ref: '#/definitions/RetrieveApplicationResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/RetrieveApplicationResponse'
+  /rmAccountRelationship:
+    post:
+      tags:
+        - RM
+      summary: maintain / delete relationship of RM & Accounts
+      description: RM account relationship maintainence
+      operationId: rmAccountRelationshipPostUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - in: body
+          name: request
+          description: JSON request object.
+          required: true
+          schema:
+            $ref: '#/definitions/RmAccountRelationshipRequest'
+      responses:
+        '200':
+          description: The relationship has been maintained / deleted
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+  /saveApplication:
+    post:
+      tags:
+        - Account Opening
+      summary: Save EAO Account Opening Application
+      description: 'Save EAO Account Opening Application '
+      operationId: saveApplicationPostUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - in: body
+          name: saveApplicationRequest
+          description: JSON request object.
+          required: true
+          schema:
+            $ref: '#/definitions/SaveApplicationRequest'
+      responses:
+        '200':
+          description: The result has been returned to user successfully
+          schema:
+            $ref: '#/definitions/SaveApplicationResponse'
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request.
+          schema:
+            $ref: '#/definitions/SaveApplicationResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/SaveApplicationResponse'
+    put:
+      tags:
+        - Account Opening
+      summary: Update EAO Account Opening Application
+      description: 'Update EAO Account Opening Application '
+      operationId: saveApplicationPutUsingPUT
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - in: body
+          name: saveApplicationRequest
+          description: JSON request object.
+          required: true
+          schema:
+            $ref: '#/definitions/SaveApplicationRequest'
+      responses:
+        '200':
+          description: The result has been returned to user successfully
+          schema:
+            $ref: '#/definitions/SaveApplicationResponse'
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request.
+          schema:
+            $ref: '#/definitions/SaveApplicationResponse'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: System Internal Error. Please contact system administrator
+          schema:
+            $ref: '#/definitions/SaveApplicationResponse'
+  /vcc/application/existence:
+    get:
+      tags:
+        - Save &amp; Resume Application
+      summary: Check if VCC application exist
+      description: 'Check if VCC application exist '
+      operationId: vccApplicationExistenceGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: rmId
+          in: query
+          description: RmId
+          required: false
+          type: string
+        - name: customerType
+          in: query
+          description: customerType
+          required: false
+          type: string
+        - name: mobileNoCountryCode
+          in: query
+          description: Mobile number country code
+          required: false
+          type: string
+        - name: mobileNo
+          in: query
+          description: Mobile number
+          required: false
+          type: string
+        - name: email
+          in: query
+          description: Email
+          required: false
+          type: string
+      responses:
+        '200':
+          description: The request is served successfully. VCC application exist.
+          schema:
+            $ref: '#/definitions/VccExistenceResp'
+        '400':
+          description: User agent did not provide a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /vcc/application/report:
+    post:
+      tags:
+        - Generate Report
+      summary: Generate vcc reports
+      description: Query application reports
+      operationId: vccApplicationReportGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: reportType
+          in: query
+          description: JSON request object.
+          required: false
+          type: string
+        - name: param
+          in: query
+          description: JSON request object.
+          required: false
+          type: string
+      responses:
+        '200':
+          description: The request is served successfully.
+          schema:
+            $ref: '#/definitions/VccApplicationsResp'
+        '201':
+          description: Created
+        '400':
+          description: User agent did not provide a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /vcc/applications:
+    get:
+      tags:
+        - Query Application
+      summary: Query applications by certain criterias
+      description: Query applications by input searching criteria
+      operationId: vccApplicationsGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: submitDateFrom
+          in: query
+          description: To retrieve application form with submission date from input parameter. The format is yyyy-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: submitDateTo
+          in: query
+          description: To retrieve application form with submission date to input parameter. The format is yyyy-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: countryCode
+          in: query
+          description: To retrieve application form with input country code.
+          required: false
+          type: string
+        - name: refNo
+          in: query
+          description: Directbank application reference number
+          required: false
+          type: string
+        - name: mobileNo
+          in: query
+          description: To retrieve application form with input mobile number.
+          required: false
+          type: string
+        - name: email
+          in: query
+          description: To retrieve application form with input email.
+          required: false
+          type: string
+        - name: idNum
+          in: query
+          description: To retrieve application form with input customer identity number.
+          required: false
+          type: string
+        - name: status
+          in: query
+          description: To retrieve application form with input status.
+          required: false
+          type: array
+          items:
+            type: string
+          collectionFormat: multi
+          enum:
+            - Drafted
+            - Submitted
+            - Processing
+            - Pending for Los
+            - Rejected
+            - Referred
+            - Approved
+            - Completed
+            - Cancelled
+            - System Failure
+        - name: lastUpdateFrom
+          in: query
+          description: To retrieve application form with last update date from input parameter. The format is yyyy-MM-DD
+          required: false
+          type: string
+          format: date
+        - name: lastUpdateTo
+          in: query
+          description: To retrieve application form with last update date to input parameter.
+          required: false
+          type: string
+          format: date
+        - name: pageSize
+          in: query
+          description: 'To indicate the number of forms return per time. if not provided, pageSize will be set to 1000'
+          required: false
+          type: string
+        - name: pageNo
+          in: query
+          description: 'To indicate the page index for returning forms. if not provided, will return the first page of results.'
+          required: false
+          type: string
+        - name: mode
+          in: query
+          description: 'To determine the level of details of application from. When value = D, this interface returns list of detailed application form with field applicationDetail filled. When value = S, this interface returns list of summarized application form without field applicationDetail. If not provided, S will be applied'
+          required: false
+          type: string
+          enum:
+            - S
+            - D
+      responses:
+        '200':
+          description: The request is served successfully.
+          schema:
+            $ref: '#/definitions/VccApplicationsResp'
+        '400':
+          description: User agent did not provide a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/vcc/applications/{refNo}':
+    get:
+      tags:
+        - Query Application
+      summary: Query application detail by specific refId
+      description: Query VCC application info by directbank refId
+      operationId: vccApplicationsRefNoGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: refNo
+          in: path
+          description: Direct Bank reference ID
+          required: true
+          type: string
+      responses:
+        '200':
+          description: The request is served successfully.
+          schema:
+            $ref: '#/definitions/VccApplicationSummary'
+        '400':
+          description: User agent did not provide a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/vcc/campaign/{customerType}':
+    get:
+      tags:
+        - Save &amp; Resume Application
+      summary: Get VCC campaign information
+      description: 'Retrieve the current credit card type list for VCC (campaign) together with credit card gift information '
+      operationId: vccCampaignCustomerTypeGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: customerType
+          in: path
+          description: Customer Type
+          required: true
+          type: string
+          enum:
+            - '"ETB"'
+            - '"NTB"'
+        - name: tspId
+          in: query
+          description: Tsp Id
+          required: false
+          type: string
+      responses:
+        '200':
+          description: The request is served successfully.
+          schema:
+            $ref: '#/definitions/VccCampaignResp'
+        '400':
+          description: User agent did not provide a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /vcc/createApplication:
+    post:
+      tags:
+        - Save &amp; Resume Application
+      summary: Create VCC Account Opening Application
+      description: 'Save VCC Account Opening Application '
+      operationId: vccCreateApplicationPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - in: body
+          name: createVccApplicationReq
+          description: JSON request object.
+          required: true
+          schema:
+            $ref: '#/definitions/CreateVccApplicationReq'
+      responses:
+        '200':
+          description: The application has saved successfully
+          schema:
+            $ref: '#/definitions/SaveVccApplicationResp'
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /vcc/createApplication/etb:
+    post:
+      tags:
+        - Save &amp; Resume Application
+      summary: Create VCC ETB Account Opening Application
+      description: 'Create VCC ETB Account Opening Application '
+      operationId: vccCreateApplicationEtbPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - in: body
+          name: createVccEtbApplicationReq
+          description: JSON request object.
+          required: true
+          schema:
+            $ref: '#/definitions/CreateVccEtbApplicationReq'
+      responses:
+        '200':
+          description: The application has saved successfully
+          schema:
+            $ref: '#/definitions/RetrieveVccEtbApplicationResp'
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /vcc/eligibility/etb/rmtrailer:
+    get:
+      tags:
+        - Eligibility
+      summary: Check if user is eligible to apply VCC ETB for checking rmTrailer
+      description: 'Check if user is eligible to apply VCC ETB for checking rmTrailer '
+      operationId: vccEligibilityEtbRmtrailerGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: rmId
+          in: query
+          description: rmid
+          required: false
+          type: string
+      responses:
+        '200':
+          description: The request is served successfully.
+          schema:
+            $ref: '#/definitions/VccEligibilityResp'
+        '400':
+          description: User agent did not provide a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /vcc/housekeeping:
+    post:
+      tags:
+        - HouseKeeping
+      summary: Run VCC Application Housekeeping
+      description: 'Run VCC Application Housekeeping '
+      operationId: vccHousekeepingPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - in: body
+          name: vccHouseKeepingReq
+          description: JSON request object.
+          required: false
+          schema:
+            $ref: '#/definitions/VccHouseKeepingReq'
+      responses:
+        '200':
+          description: The application has saved successfully
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /vcc/landing:
+    get:
+      tags:
+        - Landing
+      summary: Get VCC landing details
+      operationId: vccLandingGet
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      responses:
+        '200':
+          description: 'Landing successfully, VCC function is valid for customer'
+          schema:
+            $ref: '#/definitions/VccLandingResp'
+        '400':
+          description: User agent did not provide a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /vcc/rerunApplication:
+    post:
+      tags:
+        - ReRun Application
+      summary: Rerun VCC Account Opening Application
+      description: 'Rerun VCC Account Opening Application '
+      operationId: vccRerunApplicationPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - in: body
+          name: reRunVccApplicationReq
+          description: JSON request object.
+          required: true
+          schema:
+            $ref: '#/definitions/ReRunVccApplicationReq'
+      responses:
+        '200':
+          description: The application has saved successfully
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /vcc/retrieveApplication:
+    post:
+      tags:
+        - Save &amp; Resume Application
+      summary: Retrieve VCC Account Opening Application
+      description: 'Retrieve VCC Account Opening Application '
+      operationId: vccRetrieveApplicationPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - in: body
+          name: retrieveVccApplicationReq
+          description: JSON request object.
+          required: true
+          schema:
+            $ref: '#/definitions/RetrieveVccApplicationReq'
+      responses:
+        '200':
+          description: The result has been returned to user successfully
+          schema:
+            $ref: '#/definitions/RetrieveVccApplicationResp'
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /vcc/retrieveApplication/etb:
+    post:
+      tags:
+        - Save &amp; Resume Application
+      summary: Retrieve VCC Etb Account Opening Application
+      description: 'Retrieve VCC Etb Account Opening Application '
+      operationId: vccRetrieveApplicationEtbPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - in: body
+          name: retrieveVccEtbApplicationReq
+          description: JSON request object.
+          required: true
+          schema:
+            $ref: '#/definitions/RetrieveVccEtbApplicationReq'
+      responses:
+        '200':
+          description: The result has been returned to user successfully
+          schema:
+            $ref: '#/definitions/RetrieveVccEtbApplicationResp'
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /vcc/submitApplication:
+    post:
+      tags:
+        - Submit Application
+      summary: Submit VCC Account Opening Application
+      description: 'Submit VCC Account Opening Application '
+      operationId: vccSubmitApplicationPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - in: body
+          name: submitVccApplicationReq
+          description: JSON request object.
+          required: true
+          schema:
+            $ref: '#/definitions/SubmitVccApplicationReq'
+        - name: user-country
+          in: header
+          description: User country
+          required: false
+          type: string
+        - name: x-forwarded-for
+          in: header
+          description: Forwarded ip addresses
+          required: false
+          type: string
+      responses:
+        '200':
+          description: The result has been returned to user successfully
+          schema:
+            $ref: '#/definitions/SubmitVccApplicationResp'
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /vcc/updateApplication:
+    post:
+      tags:
+        - Save &amp; Resume Application
+      summary: Update VCC Account Opening Application
+      description: 'Update VCC Account Opening Application '
+      operationId: vccUpdateApplicationPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - in: body
+          name: updateVccApplicationReq
+          description: JSON request object.
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateVccApplicationReq'
+      responses:
+        '200':
+          description: The application has saved successfully
+          schema:
+            $ref: '#/definitions/SaveVccApplicationResp'
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  '/vcc/updateDocumentRefNo/{dbRefNo}':
+    post:
+      tags:
+        - Save &amp; Resume Application
+      summary: Update VCC Document RefNo
+      description: Update VCC Document RefNo
+      operationId: vccUpdateDocumentRefNoDbRefNoPost
+      consumes:
+        - application/json
+      produces:
+        - application/json
+        - application/vnd.error+json
+      parameters:
+        - name: dbRefNo
+          in: path
+          description: Backend generate application reference number
+          required: true
+          type: string
+        - in: body
+          name: updateVccTuDocumentRefNoReq
+          description: JSON request object.
+          required: true
+          schema:
+            $ref: '#/definitions/UpdateVccDocumentRefNoReq'
+      responses:
+        '200':
+          description: The Tu Document RefNo has saved successfully
+        '201':
+          description: Created
+        '400':
+          description: The request is not a valid request.
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+definitions:
+  Addresses:
+    type: object
+    properties:
+      contactAddress:
+        type: array
+        items:
+          type: string
+      domicileAddress:
+        type: array
+        items:
+          type: string
+      permanentAddress:
+        type: array
+        items:
+          type: string
+      residentialAddress:
+        type: array
+        items:
+          type: string
+  AddressesResp:
+    type: object
+    properties:
+      cnnaAddresses:
+        $ref: '#/definitions/Addresses'
+      rmAddresses:
+        $ref: '#/definitions/Addresses'
+  ApplicationSummaryUpdateReq:
+    type: object
+    properties:
+      lastUpdateChecker:
+        type: string
+        description: Last maker update
+      lastUpdateMaker:
+        type: string
+        description: Last maker update
+      remark:
+        type: string
+        description: Remark field for application form
+      status:
+        type: string
+        description: Application form status
+      subStatus:
+        type: string
+        description: Application form sub-status
+  BOEaoApplicationAddressInfo:
+    type: object
+    properties:
+      addrCountryCode:
+        type: string
+      addrMarking:
+        type: string
+        description: address marking if any
+      addrMobileNo:
+        type: string
+      addrType:
+        type: string
+        description: Address type if any
+      building:
+        type: string
+      country:
+        type: string
+      countryName:
+        type: string
+      district:
+        type: string
+      floor:
+        type: string
+      room:
+        type: string
+      source:
+        type: string
+        enum:
+          - EPRC
+          - MANUAL
+      street:
+        type: string
+      territory:
+        type: string
+    description: Address Info for BO interface
+  CheckerActionReq:
+    type: object
+    properties:
+      action:
+        type: string
+        description: Checker decision action
+        enum:
+          - Confirm
+          - BackToMaker
+      checker:
+        type: string
+        description: checker name
+      checkerType:
+        type: string
+        enum:
+          - DB
+          - CBIC
+          - QA
+      remark:
+        type: string
+        description: remark for checker
+  CifNo:
+    type: object
+    properties:
+      cifnum:
+        type: string
+  CncbEligibilityResp:
+    type: object
+    properties:
+      cncbCheckingResult:
+        type: string
+        description: 'Return checking result from CNCB, 1 is a pass case'
+      isCNCBValid:
+        type: boolean
+        example: false
+        description: Return the checking result from CNCB on if the applicant is valid to apply
+  CreateVccApplicationReq:
+    type: object
+    properties:
+      tuCheckResult:
+        $ref: '#/definitions/TUCheckResult'
+      vccApplication:
+        $ref: '#/definitions/VccApplication'
+      verifiedEmail:
+        type: string
+      verifiedMobileNo:
+        type: string
+  CreateVccEtbApplicationReq:
+    type: object
+    properties:
+      creditCardInfo:
+        $ref: '#/definitions/VccCreditCardInfo'
+      email:
+        type: string
+      holdingInquiry:
+        $ref: '#/definitions/VccHoldingInquiry'
+      mobileNo:
+        type: string
+      mobileNoCountryCode:
+        type: string
+      rmId:
+        type: string
+      tspId:
+        type: string
+        description: Third-party Service Provider Id
+  CustomerDefinitionResp:
+    type: object
+    properties:
+      customerId:
+        type: string
+        description: Customer ID from ESB00001A
+      customerType:
+        type: string
+        description: 'A enum value to indicate the request is for what kind of customer. ETB for existing customer, NTB for new customer, NTB_RB for rejoin bank customer as new customer'
+        enum:
+          - ETB
+          - NTB
+          - NTB_RB
+          - NTB_PC
+    description: Customer Definition
+  DetailApplicationForm:
+    type: object
+    required:
+      - customerType
+      - refNo
+      - status
+    properties:
+      addressCheckResult:
+        type: string
+        description: Low Accurancy Address checking result
+      addressReopenDetails:
+        type: array
+        items:
+          $ref: '#/definitions/SupplementInfoAddressReopenDetails'
+      addressRuleCheck:
+        type: string
+      amlCheckResult:
+        type: string
+      bankruptcyCheckResult:
+        type: string
+      catfishIdIssuancePlace:
+        type: string
+      catfishTxnId:
+        type: string
+      checkerRemark:
+        type: string
+        description: Remark field for checker in application form
+      contactAddressInfo:
+        $ref: '#/definitions/BOEaoApplicationAddressInfo'
+      crsCheckResult:
+        type: string
+      crsInfo:
+        $ref: '#/definitions/EaoApplicationCrsInfo'
+      crsSignoffDate:
+        type: string
+        format: date
+      customerType:
+        type: string
+        description: Customer type
+        enum:
+          - ETB
+          - NTB
+          - NTB_RB
+      description:
+        type: string
+      employmentInfo:
+        $ref: '#/definitions/EaoApplicationEmploymentInfo'
+      fatcaClassification:
+        type: string
+      fatcaInfo:
+        $ref: '#/definitions/EaoApplicationFatcaInfo'
+      fatcaSignoffDate:
+        type: string
+        format: date
+      fatcaType:
+        type: string
+      generalInfo:
+        $ref: '#/definitions/EaoApplicationGeneralInfo'
+      isBundle:
+        type: boolean
+        example: false
+      lastCheckerUpdateDatetime:
+        type: string
+        format: date-time
+      lastMakerProposedAction:
+        type: string
+        enum:
+          - Approve
+          - Reject
+          - Reopen
+      lastMakerReopenAddressTypes:
+        type: array
+        items:
+          type: string
+          enum:
+            - Residential
+            - Correspondence
+            - Permanent
+      lastMakerUpdateDatetime:
+        type: string
+        format: date-time
+      lastUpdateChecker:
+        type: string
+      lastUpdateDatetime:
+        type: string
+        format: date-time
+      lastUpdateMaker:
+        type: string
+      lastUpdateParty:
+        type: string
+      makerCheckerHistory:
+        type: array
+        items:
+          $ref: '#/definitions/MakerCheckerAction'
+      makerRemark:
+        type: string
+        description: Remark field for maker in application form
+      marketingPreference:
+        $ref: '#/definitions/EaoApplicationMarketingPreference'
+      nationalityCheckResult:
+        type: string
+      permanentAddressInfo:
+        $ref: '#/definitions/BOEaoApplicationAddressInfo'
+      pushInfo:
+        $ref: '#/definitions/EaoApplicationPushInfo'
+      questionnaire:
+        type: array
+        items:
+          type: string
+      questionnaireCheckResult:
+        type: string
+        description: Questionnaire check result
+      refNo:
+        type: string
+        description: Unique application reference number
+      rejectReason:
+        type: string
+        description: Reject reason of application if any
+      rejoinerNameResult:
+        type: string
+        description: Rejoiner name checking result
+      residentialAddressInfo:
+        $ref: '#/definitions/BOEaoApplicationAddressInfo'
+      riskScoreCheckResult:
+        type: string
+      selectContactAddress:
+        type: string
+      selectPermanentAddress:
+        type: string
+      status:
+        type: string
+        description: Status of the application
+      subStatus:
+        type: string
+        description: Sub-status of the application
+      submitDatetime:
+        type: string
+        format: date-time
+      tradeAndProfession:
+        type: string
+      tspCode:
+        type: string
+      tspEaoStatus:
+        type: string
+      tspEiaoStatus:
+        type: string
+      tspLastStatusUpdateDate:
+        type: string
+        format: date-time
+      tspSegmentStatus:
+        type: string
+      tspUniquekey:
+        type: string
+      tspVccStatus:
+        type: string
+      tspid:
+        type: string
+    description: Application Object From UI
+  EaoApplication:
+    type: object
+    required:
+      - refNo
+      - status
+    properties:
+      contactAddressInfo:
+        $ref: '#/definitions/EaoApplicationAddressInfo'
+      crsInfo:
+        $ref: '#/definitions/EaoApplicationCrsInfo'
+      customerType:
+        type: string
+        description: Customer Type of the application
+        enum:
+          - ETB
+          - NTB
+          - NTB_RB
+      employmentInfo:
+        $ref: '#/definitions/EaoApplicationEmploymentInfo'
+      fatcaInfo:
+        $ref: '#/definitions/EaoApplicationFatcaInfo'
+      generalInfo:
+        $ref: '#/definitions/EaoApplicationGeneralInfo'
+      marketingPreference:
+        $ref: '#/definitions/EaoApplicationMarketingPreference'
+      permanentAddressInfo:
+        $ref: '#/definitions/EaoApplicationAddressInfo'
+      pushInfo:
+        $ref: '#/definitions/EaoApplicationPushInfo'
+      questionnaire:
+        type: array
+        items:
+          type: string
+      refNo:
+        type: string
+        description: Unique application reference number
+      residentialAddressInfo:
+        $ref: '#/definitions/EaoApplicationAddressInfo'
+      selectContactAddress:
+        type: string
+      selectPermanentAddress:
+        type: string
+      status:
+        type: string
+        description: Status of the application
+      subStatus:
+        type: string
+        description: Sub-status of the application
+    description: Application Object From UI
+  EaoApplicationAddressInfo:
+    type: object
+    properties:
+      addrCountryCode:
+        type: string
+        description: Telecom Country code
+      addrMobileNo:
+        type: string
+      country:
+        type: string
+        description: ISO 2 character country code
+      language:
+        type: string
+        enum:
+          - zh_CN
+          - en_US
+      postalCode:
+        type: string
+      segments:
+        type: object
+        description: 'key-value pair for address segments. key should be address unit per different provider definition. '
+        additionalProperties:
+          type: string
+      source:
+        type: string
+        description: Input address source
+        enum:
+          - MANUAL
+          - EPRC
+          - CN_MANUAL
+          - CN_TENCENT
+          - CN_ID
+          - CN_ID_MODIFIED
+    description: Address Info
+  EaoApplicationCrsInfo:
+    type: object
+    properties:
+      contactAddressDiffOtherReason:
+        type: string
+      contactAddressDiffReason:
+        type: string
+      nationalityDiffOtherReason:
+        type: string
+      nationalityDiffReason:
+        type: string
+      permanentAddressDiffOtherReason:
+        type: string
+      permanentAddressDiffReason:
+        type: string
+      residentialAddressDiffOtherReason:
+        type: string
+      residentialAddressDiffReason:
+        type: string
+      taxedRegions:
+        type: array
+        description: List of Taxed Regions
+        items:
+          $ref: '#/definitions/EaoApplicationCrsInfoTaxedRegion'
+  EaoApplicationCrsInfoTaxedRegion:
+    type: object
+    properties:
+      country:
+        type: string
+      reason:
+        type: string
+      tin:
+        type: string
+    description: Taxed Region
+  EaoApplicationEmploymentInfo:
+    type: object
+    properties:
+      company:
+        type: string
+      employmentDate:
+        type: string
+      jobTitle:
+        type: string
+      monthlyIncome:
+        type: string
+      occupation:
+        type: string
+      officeCountryCode:
+        type: string
+      officePhone:
+        type: string
+    description: Employment Info
+  EaoApplicationFatcaInfo:
+    type: object
+    properties:
+      fatcaTin:
+        type: string
+      isUSCitizen:
+        type: boolean
+        example: false
+      isWithholding:
+        type: boolean
+        example: false
+  EaoApplicationGeneralInfo:
+    type: object
+    required:
+      - countryCode
+      - email
+      - mobileNo
+    properties:
+      birthPlace:
+        type: string
+      countryCode:
+        type: string
+      dob:
+        type: string
+      email:
+        type: string
+      engFirstName:
+        type: string
+      engLastName:
+        type: string
+      extraNationalityList:
+        type: array
+        items:
+          type: string
+      gender:
+        type: string
+      hasExtraNationality:
+        type: boolean
+        example: false
+      idNo:
+        type: string
+      idType:
+        type: string
+      mobileNo:
+        type: string
+      nationality:
+        type: string
+      ocrEngFirstName:
+        type: string
+      ocrEngLastName:
+        type: string
+    description: General Info
+  EaoApplicationMarketingPreference:
+    type: object
+    properties:
+      isDirectMarketing:
+        type: boolean
+        example: false
+      isDirectMarketingEmail:
+        type: boolean
+        example: false
+      isDirectMarketingPhone:
+        type: boolean
+        example: false
+      isDirectMarketingPost:
+        type: boolean
+        example: false
+      isDirectMarketingSMS:
+        type: boolean
+        example: false
+      isDirectMarketingThirdParty:
+        type: boolean
+        example: false
+  EaoApplicationPushInfo:
+    type: object
+    properties:
+      language:
+        type: string
+  Error:
+    type: object
+    properties:
+      cause:
+        $ref: '#/definitions/Throwable'
+      localizedMessage:
+        type: string
+      message:
+        type: string
+      stackTrace:
+        type: array
+        items:
+          $ref: '#/definitions/StackTraceElement'
+      suppressed:
+        type: array
+        items:
+          $ref: '#/definitions/Throwable'
+  File:
+    type: object
+    properties:
+      absolute:
+        type: boolean
+      absoluteFile:
+        $ref: '#/definitions/File'
+      absolutePath:
+        type: string
+      canonicalFile:
+        $ref: '#/definitions/File'
+      canonicalPath:
+        type: string
+      directory:
+        type: boolean
+      file:
+        type: boolean
+      freeSpace:
+        type: integer
+        format: int64
+      hidden:
+        type: boolean
+      name:
+        type: string
+      parent:
+        type: string
+      parentFile:
+        $ref: '#/definitions/File'
+      path:
+        type: string
+      totalSpace:
+        type: integer
+        format: int64
+      usableSpace:
+        type: integer
+        format: int64
+  InputStream:
+    type: object
+  MakerActionReq:
+    type: object
+    properties:
+      checkListTypes:
+        type: array
+        items:
+          type: string
+          enum:
+            - Aml
+            - Bankcruptcy
+            - RejoinName
+      maker:
+        type: string
+        description: Maker name
+      makerType:
+        type: string
+        description: makerType
+        enum:
+          - DB
+          - CBIC
+          - QA
+      ocrVerification:
+        type: string
+        description: OrcVerification options result. Comma separated values
+      proposedDecision:
+        type: string
+        description: Proposed decision from maker
+        enum:
+          - Approve
+          - Reject
+          - Reopen
+      qaResult:
+        $ref: '#/definitions/QaResult'
+      remark:
+        type: string
+      repoenAddressTypes:
+        type: array
+        items:
+          type: string
+          enum:
+            - Residential
+            - Correspondence
+            - Permanent
+  MakerCheckerAction:
+    type: object
+    properties:
+      checker:
+        type: string
+        description: Checker name
+      checkerDecision:
+        type: string
+        enum:
+          - Confirm
+          - BackToMaker
+      checkerRemark:
+        type: string
+        description: checker remark field of maker checker action
+      checkerUpdateTime:
+        type: string
+        format: date-time
+      maker:
+        type: string
+        description: Maker name
+      makerCheckerType:
+        type: string
+        enum:
+          - DB
+          - CBIC
+          - QA
+      makerDecision:
+        type: string
+        enum:
+          - Approve
+          - Reject
+          - Reopen
+      makerRemark:
+        type: string
+        description: maker remark field of maker checker action
+      makerUpdateTime:
+        type: string
+        format: date-time
+      ocrVerification:
+        type: string
+        description: 'OrcVerification options result if any, omma separated values'
+  PibAccountCreateReq:
+    type: object
+    properties:
+      email:
+        type: string
+      mobileNo:
+        type: string
+        description: Mobile registered for application
+      mobileNoCountryCode:
+        type: string
+      password:
+        type: string
+        description: encrpted password
+      username:
+        type: string
+        description: username
+      verifiedMobileNo:
+        type: string
+  PibAccountCreateResp:
+    type: object
+    properties:
+      dbRefNo:
+        type: string
+  PibLoginIdResp:
+    type: object
+    properties:
+      loginId:
+        type: string
+        description: pib login id
+  PrcApplication:
+    type: object
+    properties:
+      contactAddressInfo:
+        $ref: '#/definitions/EaoApplicationAddressInfo'
+      crsInfo:
+        $ref: '#/definitions/EaoApplicationCrsInfo'
+      customerType:
+        type: string
+        description: Customer type
+        enum:
+          - ETB
+          - NTB
+          - NTB_RB
+      domicileAddressInfo:
+        $ref: '#/definitions/EaoApplicationAddressInfo'
+      ekycQaStatus:
+        type: string
+        description: QA status
+      employmentInfo:
+        $ref: '#/definitions/PrcApplicationEmploymentInfo'
+      fatcaInfo:
+        $ref: '#/definitions/EaoApplicationFatcaInfo'
+      generalInfo:
+        $ref: '#/definitions/PrcApplicationGeneralInfo'
+      marketingPreference:
+        $ref: '#/definitions/PrcApplicationMarketingPreference'
+      openId:
+        type: string
+      permanentAddressInfo:
+        $ref: '#/definitions/EaoApplicationAddressInfo'
+      pushInfo:
+        $ref: '#/definitions/EaoApplicationPushInfo'
+      questionnaire:
+        type: array
+        items:
+          type: string
+      refNo:
+        type: string
+        description: Unique application reference number
+      residentialAddressInfo:
+        $ref: '#/definitions/EaoApplicationAddressInfo'
+      selectContactAddress:
+        type: string
+      selectPermanentAddress:
+        type: string
+      status:
+        type: string
+        description: Status of the application
+      subStatus:
+        type: string
+        description: Sub-status of the application
+    description: Application Object From UI
+  PrcApplicationBOAddressDomicileAddressInfo:
+    type: object
+    properties:
+      address:
+        type: string
+      postalCode:
+        type: string
+      source:
+        type: string
+        enum:
+          - CN_ID
+          - CN_ID_MODIFIED
+  PrcApplicationBOAddressInfo:
+    type: object
+    properties:
+      addrCountryCode:
+        type: string
+      addrMarking:
+        type: string
+        description: address marking if any
+      addrMobileNo:
+        type: string
+      addrType:
+        type: string
+        description: Address type if any
+      cnnaLine1:
+        type: string
+      cnnaLine2:
+        type: string
+      cnnaLine3:
+        type: string
+      country:
+        type: string
+      countryName:
+        type: string
+      language:
+        type: string
+        enum:
+          - zh_CN
+          - en_US
+      postalCode:
+        type: string
+      rmLine1:
+        type: string
+      rmLine2:
+        type: string
+      rmLine3:
+        type: string
+      segments:
+        type: object
+        description: 'key-value pair for address segments. key should be address unit per different provider definition. '
+        additionalProperties:
+          type: string
+      source:
+        type: string
+        enum:
+          - MANUAL
+          - EPRC
+          - CN_MANUAL
+          - CN_TENCENT
+          - CN_ID
+          - CN_ID_MODIFIED
+    description: Address in a PRC ID application display to BO
+  PrcApplicationDetail:
+    type: object
+    properties:
+      addressCheckResult:
+        type: string
+        description: Low Accurancy Address checking result
+      addressReopenDetails:
+        type: array
+        items:
+          $ref: '#/definitions/SupplementInfoAddressReopenDetails'
+      amlCheckResult:
+        type: string
+      bankruptcyCheckResult:
+        type: string
+      catfishIdIssuancePlace:
+        type: string
+      catfishTxnId:
+        type: string
+      contactAddressInfo:
+        $ref: '#/definitions/PrcApplicationBOAddressInfo'
+      crsCheckResult:
+        type: string
+      crsInfo:
+        $ref: '#/definitions/EaoApplicationCrsInfo'
+      crsSignoffDate:
+        type: string
+        format: date
+      customerType:
+        type: string
+        description: Customer type
+        enum:
+          - ETB
+          - NTB
+          - NTB_RB
+      declaredPinyin:
+        type: array
+        items:
+          type: string
+      domicileAddressInfo:
+        $ref: '#/definitions/PrcApplicationBOAddressDomicileAddressInfo'
+      ekycQaStatus:
+        type: string
+        description: QA status
+      ekycScore:
+        $ref: '#/definitions/PrcSupplementExtraEkycScore'
+      employmentInfo:
+        $ref: '#/definitions/PrcApplicationEmploymentInfo'
+      fatcaClassification:
+        type: string
+      fatcaInfo:
+        $ref: '#/definitions/EaoApplicationFatcaInfo'
+      fatcaSignoffDate:
+        type: string
+        format: date
+      fatcaType:
+        type: string
+      generalInfo:
+        $ref: '#/definitions/PrcApplicationGeneralInfo'
+      lastCheckerUpdateDatetime:
+        type: string
+        format: date-time
+      lastMakerProposedAction:
+        type: string
+        enum:
+          - Approve
+          - Reject
+          - Reopen
+      lastMakerReopenAddressTypes:
+        type: array
+        items:
+          type: string
+          enum:
+            - Residential
+            - Correspondence
+            - Permanent
+      lastMakerUpdateDatetime:
+        type: string
+        format: date-time
+      lastUpdateChecker:
+        type: string
+      lastUpdateDatetime:
+        type: string
+        format: date-time
+      lastUpdateMaker:
+        type: string
+      lastUpdateParty:
+        type: string
+      makerCheckerHistory:
+        type: array
+        items:
+          $ref: '#/definitions/MakerCheckerAction'
+      marketingPreference:
+        $ref: '#/definitions/PrcApplicationMarketingPreference'
+      nationalityCheckResult:
+        type: string
+      ocrVerification:
+        type: string
+        description: OrcVerification options result. Comma separated values
+      openId:
+        type: string
+      permanentAddressInfo:
+        $ref: '#/definitions/PrcApplicationBOAddressInfo'
+      pinyinMissMatch:
+        type: integer
+        format: int32
+        description: Pinyin miss-match attempt count
+      possiblePinyin:
+        type: array
+        items:
+          type: string
+      pushInfo:
+        $ref: '#/definitions/EaoApplicationPushInfo'
+      questionnaire:
+        type: array
+        items:
+          type: string
+      questionnaireCheckResult:
+        type: string
+        description: Questionnaire check result
+      refNo:
+        type: string
+        description: Unique application reference number
+      rejectReason:
+        type: string
+        description: Reject reason of application if any
+      rejoinerNameResult:
+        type: string
+        description: Rejoiner name checking result
+      remark:
+        type: string
+        description: Remark field for application form
+      reopenUploadCount:
+        type: integer
+        format: int32
+        description: Reopened & eID Doc Upload Count
+      residentialAddressInfo:
+        $ref: '#/definitions/PrcApplicationBOAddressInfo'
+      riskScoreCheckResult:
+        type: string
+      selectContactAddress:
+        type: string
+      selectPermanentAddress:
+        type: string
+      status:
+        type: string
+        description: Status of the application
+      subStatus:
+        type: string
+        description: Sub-status of the application
+      submitDatetime:
+        type: string
+        format: date-time
+      submitLocation:
+        type: string
+        description: Country/region on the device location when the application is submitted
+      tradeAndProfession:
+        type: string
+    description: Application Object From UI
+  PrcApplicationDocReq:
+    type: object
+    properties:
+      ekycTxnId:
+        type: string
+        description: Ekyc action transaction ID
+  PrcApplicationDraft:
+    type: object
+    properties:
+      contactAddressInfo:
+        $ref: '#/definitions/EaoApplicationAddressInfo'
+      crsInfo:
+        $ref: '#/definitions/EaoApplicationCrsInfo'
+      domicileAddressInfo:
+        $ref: '#/definitions/PrcApplicationDraftDomicileAddressInfo'
+      employmentInfo:
+        $ref: '#/definitions/PrcApplicationEmploymentInfo'
+      fatcaInfo:
+        $ref: '#/definitions/EaoApplicationFatcaInfo'
+      generalInfo:
+        $ref: '#/definitions/PrcApplicationDraftGeneralInfo'
+      marketingPreference:
+        $ref: '#/definitions/PrcApplicationMarketingPreference'
+      permanentAddressInfo:
+        $ref: '#/definitions/EaoApplicationAddressInfo'
+      pushInfo:
+        $ref: '#/definitions/EaoApplicationPushInfo'
+      questionnaire:
+        type: array
+        items:
+          type: string
+      residentialAddressInfo:
+        $ref: '#/definitions/EaoApplicationAddressInfo'
+      selectContactAddress:
+        type: string
+      selectPermanentAddress:
+        type: string
+    description: Draft Application Object From UI
+  PrcApplicationDraftDomicileAddressInfo:
+    type: object
+    properties:
+      postalCode:
+        type: string
+    description: Domicile Address Info
+  PrcApplicationDraftGeneralInfo:
+    type: object
+    properties:
+      engFirstName:
+        type: string
+      engLastName:
+        type: string
+      hasTravelDocument:
+        type: boolean
+        example: false
+        description: 'Links to the question: 是否持有旅行证件'
+    description: General Info
+  PrcApplicationEkycReq:
+    type: object
+    properties:
+      address:
+        type: string
+        description: Address
+      birthDt:
+        type: string
+        format: date-time
+        description: Birthday date
+      catfishIssuancePlace:
+        type: string
+        description: 'Catfish issuance place, needed when method is Catfish'
+      cncbAccountNo:
+        type: string
+        description: 'CNCB account no, needed when method is Catfish'
+      countryCode:
+        type: string
+        description: 'Mobile number''s country code, needed when method is Catfish'
+      dbRefId:
+        type: string
+        description: 'DB reference number for created application, needed when method id EID'
+      editIdNo:
+        type: string
+        description: Id number which is edited by user
+      editName:
+        type: string
+        description: Name which is edited by user
+      ekycTxnId:
+        type: string
+        description: 'Ekyc action transaction ID / Catfish transaction ID, based on ekyc method given'
+      email:
+        type: string
+        description: 'Email address which passed OTP verification, needed when method is Catfish'
+      gender:
+        type: string
+        description: Gender
+      idNo:
+        type: string
+        description: ID No.
+      mobile:
+        type: string
+        description: 'Mobile number which passed OTP verification, needed when method is Catfish'
+      name:
+        type: string
+        description: Name
+      password:
+        type: string
+        description: Password for pib setup
+      userName:
+        type: string
+        description: Username for pib setup
+      validUntil:
+        type: string
+        format: date-time
+        description: ID validate end date
+  PrcApplicationEmploymentInfo:
+    type: object
+    properties:
+      company:
+        type: string
+      employmentDate:
+        type: string
+      jobTitle:
+        type: string
+      monthlyIncome:
+        type: string
+      occupation:
+        type: string
+      officeCountryCode:
+        type: string
+      officePhone:
+        type: string
+    description: Employment Info
+  PrcApplicationGeneralInfo:
+    type: object
+    properties:
+      birthPlace:
+        type: string
+      chiName:
+        type: string
+      cncbAccountNo:
+        type: string
+      countryCode:
+        type: string
+      dob:
+        type: string
+        format: date-time
+      email:
+        type: string
+      engFirstName:
+        type: string
+      engLastName:
+        type: string
+      extraNationalityList:
+        type: array
+        description: Always empty
+        items:
+          type: string
+      gender:
+        type: string
+      hasExtraNationality:
+        type: boolean
+        example: false
+        description: Always false
+      hasTravelDocument:
+        type: boolean
+        example: false
+        description: 'Links to the question: 是否持有旅行证件'
+      idExpiry:
+        type: string
+        format: date-time
+        description: 身份证有效期
+      idNo:
+        type: string
+      idType:
+        type: string
+      mobileNo:
+        type: string
+      nationality:
+        type: string
+    description: General Info
+  PrcApplicationMarketingPreference:
+    type: object
+    properties:
+      isDirectMarketing:
+        type: boolean
+        example: false
+      isDirectMarketingEmail:
+        type: boolean
+        example: false
+      isDirectMarketingPhone:
+        type: boolean
+        example: false
+      isDirectMarketingPost:
+        type: boolean
+        example: false
+      isDirectMarketingSMS:
+        type: boolean
+        example: false
+      isDirectMarketingThirdParty:
+        type: boolean
+        example: false
+  PrcApplicationOcrReq:
+    type: object
+    properties:
+      ekycTxnId:
+        type: string
+        description: Ekyc action transaction ID
+  PrcCreateAppReq:
+    type: object
+    properties:
+      email:
+        type: string
+        description: Email address which passed OTP verification
+  PrcCreateAppResp:
+    type: object
+    properties:
+      dbRefId:
+        type: string
+        description: DB reference number for created application
+  PrcExistenceResp:
+    type: object
+    properties:
+      result:
+        type: boolean
+        example: false
+        description: True if record exists
+  PrcLandingResp:
+    type: object
+    properties:
+      isLocationQualified:
+        type: boolean
+        example: false
+        description: If GPS coordinate is qualified to conduct PRC ID EAO
+      isQuotaAvailable:
+        type: boolean
+        example: false
+        description: If we still has daily quota
+      isServiceHour:
+        type: boolean
+        example: false
+        description: If PRC ID eao is in service
+  PrcPostalResp:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+        description: B/E District ID
+      postalCode:
+        type: string
+        description: The six-digit postal code of the district
+  PrcSubmitAppResp:
+    type: object
+    properties:
+      isQuotaAvailable:
+        type: boolean
+        example: false
+        description: If we still has daily quota
+      isServiceHour:
+        type: boolean
+        example: false
+        description: If PRC ID eao is in service
+  PrcSupplementExtraEkycScore:
+    type: object
+    properties:
+      liveGongan:
+        type: number
+        description: Liveness against GongAn score
+      uploadGongan:
+        type: number
+        description: Upload against GongAn score
+      uploadLive:
+        type: number
+        description: Upload against Liveness score
+  QaResult:
+    type: object
+    properties:
+      aossBpmNo:
+        type: string
+      idCard:
+        $ref: '#/definitions/QaResultIdCard'
+      ocr:
+        $ref: '#/definitions/QaResultOcr'
+      selfie:
+        $ref: '#/definitions/QaResultSelfie'
+      verifiedDateOfBirth:
+        type: string
+      verifiedGender:
+        type: string
+      verifiedHkdNo:
+        type: string
+      verifiedPlaceOfBirth:
+        type: string
+      yearOnlyDate:
+        type: string
+      yearOnlyFlag:
+        type: string
+    description: QA results
+  QaResultIdCard:
+    type: object
+    properties:
+      hkPermId:
+        type: boolean
+        example: false
+  QaResultOcr:
+    type: object
+    properties:
+      birthPlace:
+        type: boolean
+        example: false
+      dob:
+        type: boolean
+        example: false
+      gender:
+        type: boolean
+        example: false
+      idNo:
+        type: boolean
+        example: false
+      name:
+        type: boolean
+        example: false
+  QaResultSelfie:
+    type: object
+    properties:
+      age:
+        type: boolean
+        example: false
+      facialMark:
+        type: boolean
+        example: false
+      gender:
+        type: boolean
+        example: false
+      other:
+        type: boolean
+        example: false
+      race:
+        type: boolean
+        example: false
+      selfieAppearance:
+        type: boolean
+        example: false
+  ReRunPrcApplicationReq:
+    type: object
+    properties:
+      refNo:
+        type: string
+        description: refNo
+  ReRunVccApplicationReq:
+    type: object
+    properties:
+      dbRefNo:
+        type: string
+        description: dbRefNo
+  Resource:
+    type: object
+    properties:
+      description:
+        type: string
+      file:
+        $ref: '#/definitions/File'
+      filename:
+        type: string
+      inputStream:
+        $ref: '#/definitions/InputStream'
+      open:
+        type: boolean
+      readable:
+        type: boolean
+      uri:
+        $ref: '#/definitions/URI'
+      url:
+        $ref: '#/definitions/URL'
+  RetrieveApplicationRequest:
+    type: object
+    properties:
+      countryCode:
+        type: string
+        description: Country code for mobile number
+      email:
+        type: string
+        description: E-mail Address
+      id:
+        type: string
+        description: Identity document
+      mobileNo:
+        type: string
+        description: Mobile Number
+  RetrieveApplicationResponse:
+    type: object
+    required:
+      - eaoApplication
+    properties:
+      eaoApplication:
+        $ref: '#/definitions/EaoApplication'
+  RetrieveVccApplicationReq:
+    type: object
+    properties:
+      email:
+        type: string
+        description: E-mail Address
+      mobileNo:
+        type: string
+        description: Mobile Number
+      mobileNoCountryCode:
+        type: string
+        description: Country code for mobile number
+  RetrieveVccApplicationResp:
+    type: object
+    required:
+      - vccApplication
+    properties:
+      vccApplication:
+        $ref: '#/definitions/VccApplicationResp'
+  RetrieveVccEtbApplicationReq:
+    type: object
+    properties:
+      holdingInquiry:
+        $ref: '#/definitions/VccHoldingInquiry'
+      rmId:
+        type: string
+  RetrieveVccEtbApplicationResp:
+    type: object
+    properties:
+      draftVccApplication:
+        $ref: '#/definitions/VccApplicationResp'
+      giftRemovalFlag:
+        type: boolean
+        example: false
+        description: Indicate whether gift code is removed
+      prefilledVccApplication:
+        $ref: '#/definitions/VccApplicationResp'
+  RmAccountRelationshipRequest:
+    type: object
+    required:
+      - accountType
+      - acctIDACN
+      - acctIDCTL1
+      - acctIDCTL2
+      - acctIDCTL3
+      - acctIDCTL4
+      - actionCode
+      - connectorCode
+      - listOfCifNo
+    properties:
+      accountType:
+        type: string
+        description: 'type of account, DB for directbank account'
+      acctIDACN:
+        type: string
+        description: 'account number, 12 digit number'
+      acctIDCTL1:
+        type: string
+        description: 0018 for hk
+      acctIDCTL2:
+        type: string
+        description: acctIDCTL2
+      acctIDCTL3:
+        type: string
+        description: acctIDCTL3
+      acctIDCTL4:
+        type: string
+        description: acctIDCTL4
+      actionCode:
+        type: string
+        description: action Code
+      connectorCode:
+        type: string
+        description: IDN for single personale
+      listOfCifNo:
+        type: array
+        items:
+          $ref: '#/definitions/CifNo'
+  SaveApplicationRequest:
+    type: object
+    properties:
+      catfishIdIssuancePlace:
+        type: string
+        description: catfish Id issuance place
+      catfishTxnId:
+        type: string
+        description: catfish transaction Id
+      eaoApplication:
+        $ref: '#/definitions/EaoApplication'
+  SaveApplicationResponse:
+    type: object
+    required:
+      - appId
+    properties:
+      appId:
+        type: string
+        description: Application ID
+      isServiceHour:
+        type: boolean
+        example: false
+        description: Flag to indicate if the submission time is within service hour. True means it is within service hour. False means not in service hour.
+  SaveVccApplicationResp:
+    type: object
+    required:
+      - refNo
+    properties:
+      dbRefNo:
+        type: string
+        description: Backend generate application reference number
+      giftRemovalFlag:
+        type: boolean
+        example: false
+        description: Indicate whether gift code is removed
+      refNo:
+        type: string
+        description: Client generate application reference number
+  StackTraceElement:
+    type: object
+    properties:
+      className:
+        type: string
+      fileName:
+        type: string
+      lineNumber:
+        type: integer
+        format: int32
+      methodName:
+        type: string
+      nativeMethod:
+        type: boolean
+  SubmitVccApplicationReq:
+    type: object
+    properties:
+      dbRefNo:
+        type: string
+      holdingInquiry:
+        $ref: '#/definitions/VccHoldingInquiry'
+      vccApplication:
+        $ref: '#/definitions/VccApplication'
+      verifiedMobileNo:
+        type: string
+    description: 'If wanna perform save&submit, application also has to be provided. '
+  SubmitVccApplicationResp:
+    type: object
+    properties:
+      dbRefNo:
+        type: string
+        description: Backend generate application reference number
+      giftRemovalFlag:
+        type: boolean
+        example: false
+        description: Indicate whether gift code is removed
+      isServiceHour:
+        type: boolean
+        example: false
+        description: Flag to indicate if the submission time is within service hour. True means it is within service hour. False means not in service hour.
+      refNo:
+        type: string
+        description: 'Client generate application reference number '
+  SupplementInfoAddressReopenDetails:
+    type: object
+    properties:
+      reopenTime:
+        type: string
+        format: date-time
+      repoenAddressTypes:
+        type: array
+        items:
+          type: string
+          enum:
+            - Residential
+            - Correspondence
+            - Permanent
+  TUCheckResult:
+    type: object
+    properties:
+      ageValid:
+        type: boolean
+        example: false
+        description: Indicate fulfill age requirement
+      dobSymbols:
+        type: string
+        description: DOB Symbols
+      documentNumber:
+        type: string
+        description: Document Numbers
+      hkid:
+        type: boolean
+        example: false
+        description: Indicate the ID issuer is HKG
+      issueType:
+        type: string
+        description: Issue Type
+      issuerCode:
+        type: string
+        description: Issuer Code
+      issuerName:
+        type: string
+        description: Issuer Name
+      permHkid:
+        type: boolean
+        example: false
+        description: Indicate the ID is permanent ID
+      transactionId:
+        type: string
+        description: Catfish transaction Id
+      valid:
+        type: boolean
+        example: false
+        description: ID document validation
+  Throwable:
+    type: object
+    properties:
+      cause:
+        $ref: '#/definitions/Throwable'
+      localizedMessage:
+        type: string
+      message:
+        type: string
+      stackTrace:
+        type: array
+        items:
+          $ref: '#/definitions/StackTraceElement'
+      suppressed:
+        type: array
+        items:
+          $ref: '#/definitions/Throwable'
+  URI:
+    type: object
+    properties:
+      absolute:
+        type: boolean
+      authority:
+        type: string
+      fragment:
+        type: string
+      host:
+        type: string
+      opaque:
+        type: boolean
+      path:
+        type: string
+      port:
+        type: integer
+        format: int32
+      query:
+        type: string
+      rawAuthority:
+        type: string
+      rawFragment:
+        type: string
+      rawPath:
+        type: string
+      rawQuery:
+        type: string
+      rawSchemeSpecificPart:
+        type: string
+      rawUserInfo:
+        type: string
+      scheme:
+        type: string
+      schemeSpecificPart:
+        type: string
+      userInfo:
+        type: string
+  URL:
+    type: object
+    properties:
+      authority:
+        type: string
+      content:
+        type: object
+      defaultPort:
+        type: integer
+        format: int32
+      file:
+        type: string
+      host:
+        type: string
+      path:
+        type: string
+      port:
+        type: integer
+        format: int32
+      protocol:
+        type: string
+      query:
+        type: string
+      ref:
+        type: string
+      userInfo:
+        type: string
+  UpdateVccApplicationReq:
+    type: object
+    properties:
+      dbRefNo:
+        type: string
+      holdingInquiry:
+        $ref: '#/definitions/VccHoldingInquiry'
+      vccApplication:
+        $ref: '#/definitions/VccApplication'
+      verifiedMobileNo:
+        type: string
+  UpdateVccDocumentRefNoReq:
+    type: object
+    properties:
+      documentType:
+        type: string
+        description: 'Allowed values:  - "VCC_PASSPORT_COPY"  - "VCC_INCOME_PROOF"  - "VCC_ADDRESS_PROOF"  - "TU_ID_DOC"  - "TU_SELFIE" '
+      refNo:
+        type: string
+  VccAddressAndPhoneInfo:
+    type: object
+    properties:
+      country:
+        type: string
+        description: ISO 2 character country code
+      language:
+        type: string
+        enum:
+          - zh_CN
+          - en_US
+      phone:
+        type: string
+      phoneCountry:
+        type: string
+      phoneCountryCode:
+        type: string
+      postalCode:
+        type: string
+      segments:
+        type: object
+        description: 'key-value pair for address segments. key should be address unit per different provider definition. '
+        additionalProperties:
+          type: string
+      source:
+        type: string
+        description: Input address source
+        enum:
+          - MANUAL
+          - EPRC
+          - LOS
+  VccApplication:
+    type: object
+    properties:
+      creditCardInfo:
+        $ref: '#/definitions/VccCreditCardInfo'
+      creditCardPreference:
+        $ref: '#/definitions/VccCreditCardPreference'
+      crsInfo:
+        $ref: '#/definitions/VccCrsInfo'
+      declarationOfRelationship:
+        $ref: '#/definitions/VccDeclarationOfRelationship'
+      documentInfo:
+        $ref: '#/definitions/VccDocumentInfo'
+      employmentInfo:
+        $ref: '#/definitions/VccEmploymentInfo'
+      fatcaInfo:
+        $ref: '#/definitions/VccFatcaInfo'
+      generalInfo:
+        $ref: '#/definitions/VccGeneralInfo'
+      marketingPreference:
+        $ref: '#/definitions/VccMarketingPreference'
+      officeAddressInfo:
+        $ref: '#/definitions/VccAddressAndPhoneInfo'
+      officeEprcAddressInfo:
+        $ref: '#/definitions/VccAddressAndPhoneInfo'
+      permanentAddressInfo:
+        $ref: '#/definitions/VccAddressAndPhoneInfo'
+      permanentEprcAddressInfo:
+        $ref: '#/definitions/VccAddressAndPhoneInfo'
+      pushInfo:
+        $ref: '#/definitions/VccPushInfo'
+      refNo:
+        type: string
+        description: Client generate application reference number
+      residentialAddressInfo:
+        $ref: '#/definitions/VccAddressAndPhoneInfo'
+      residentialEprcAddressInfo:
+        $ref: '#/definitions/VccAddressAndPhoneInfo'
+      selectPermanentAddress:
+        type: boolean
+        example: false
+        description: Indicate Permanent Address is identical to Residential Address
+      tspId:
+        type: string
+        description: Third-party Service Provider Id
+  VccApplicationCrsInfoTaxedRegion:
+    type: object
+    properties:
+      country:
+        type: string
+      reason:
+        type: string
+      tin:
+        type: string
+    description: Taxed Region
+  VccApplicationResp:
+    type: object
+    properties:
+      creditCardInfo:
+        $ref: '#/definitions/VccCreditCardInfo'
+      creditCardPreference:
+        $ref: '#/definitions/VccCreditCardPreference'
+      crsInfo:
+        $ref: '#/definitions/VccCrsInfo'
+      dbRefNo:
+        type: string
+      declarationOfRelationship:
+        $ref: '#/definitions/VccDeclarationOfRelationship'
+      documentInfo:
+        $ref: '#/definitions/VccDocumentInfo'
+      employmentInfo:
+        $ref: '#/definitions/VccEmploymentInfo'
+      fatcaInfo:
+        $ref: '#/definitions/VccFatcaInfo'
+      generalInfo:
+        $ref: '#/definitions/VccGeneralInfo'
+      marketingPreference:
+        $ref: '#/definitions/VccMarketingPreference'
+      officeAddressInfo:
+        $ref: '#/definitions/VccAddressAndPhoneInfo'
+      officeEprcAddressInfo:
+        $ref: '#/definitions/VccAddressAndPhoneInfo'
+      permanentAddressInfo:
+        $ref: '#/definitions/VccAddressAndPhoneInfo'
+      permanentEprcAddressInfo:
+        $ref: '#/definitions/VccAddressAndPhoneInfo'
+      pushInfo:
+        $ref: '#/definitions/VccPushInfo'
+      refNo:
+        type: string
+        description: Client generate application reference number
+      residentialAddressInfo:
+        $ref: '#/definitions/VccAddressAndPhoneInfo'
+      residentialEprcAddressInfo:
+        $ref: '#/definitions/VccAddressAndPhoneInfo'
+      selectPermanentAddress:
+        type: boolean
+        example: false
+        description: Indicate Permanent Address is identical to Residential Address
+      status:
+        type: string
+      tspId:
+        type: string
+        description: Third-party Service Provider Id
+      tuInfo:
+        $ref: '#/definitions/VccTUInfo'
+  VccApplicationSummary:
+    type: object
+    properties:
+      addressRuleCheck:
+        type: string
+      applicationDetail:
+        $ref: '#/definitions/VccBoApplication'
+      creationTime:
+        type: string
+        format: date-time
+      crsSignoffDate:
+        type: string
+        format: date-time
+      customerType:
+        type: string
+        enum:
+          - NTB
+          - NTB_PC
+          - NTB_RB
+          - ETB
+      dbRefNo:
+        type: string
+      description:
+        type: string
+      fatcaClassification:
+        type: string
+      fatcaSignoffDate:
+        type: string
+        format: date-time
+      fatcaType:
+        type: string
+      lastUpdateParty:
+        type: string
+      lastUpdateTime:
+        type: string
+        format: date-time
+      losInfo:
+        $ref: '#/definitions/VccLosInfo'
+      losProcessResult:
+        type: string
+        description: LOS approval process result
+      rmInfo:
+        $ref: '#/definitions/VccRmInfo'
+      status:
+        type: string
+      submissionTime:
+        type: string
+        format: date-time
+      tradeAndProfession:
+        type: string
+      tspCode:
+        type: string
+      tspEaoStatus:
+        type: string
+      tspEiaoStatus:
+        type: string
+      tspLastStatusUpdateDate:
+        type: string
+        format: date-time
+      tspRemark:
+        type: string
+      tspSegmentStatus:
+        type: string
+      tspUniquekey:
+        type: string
+      tspVccStatus:
+        type: string
+      tuInfo:
+        $ref: '#/definitions/VccTUInfo'
+  VccApplicationsResp:
+    type: object
+    required:
+      - pageNo
+      - pageSize
+      - totalNum
+    properties:
+      applications:
+        type: array
+        items:
+          $ref: '#/definitions/VccApplicationSummary'
+      pageNo:
+        type: integer
+        format: int32
+      pageSize:
+        type: integer
+        format: int32
+      totalNum:
+        type: integer
+        format: int32
+        description: total number of records found
+  VccBoAddressAndPhoneInfo:
+    type: object
+    properties:
+      addressPhoneCountry:
+        type: string
+      addressPhoneCountryCode:
+        type: string
+      addressPhoneNo:
+        type: string
+      addressline1:
+        type: string
+      addressline2:
+        type: string
+      addressline3:
+        type: string
+      addressline4:
+        type: string
+      block:
+        type: string
+      building:
+        type: string
+      country:
+        type: string
+      countryName:
+        type: string
+      district:
+        type: string
+      floor:
+        type: string
+      room:
+        type: string
+      street:
+        type: string
+      territory:
+        type: string
+  VccBoApplication:
+    type: object
+    properties:
+      creditCardInfo:
+        $ref: '#/definitions/VccCreditCardInfo'
+      creditCardPreference:
+        $ref: '#/definitions/VccCreditCardPreference'
+      crsInfo:
+        $ref: '#/definitions/VccCrsInfo'
+      declarationOfRelationship:
+        $ref: '#/definitions/VccDeclarationOfRelationship'
+      documentInfo:
+        $ref: '#/definitions/VccDocumentInfo'
+      employmentInfo:
+        $ref: '#/definitions/VccEmploymentInfo'
+      fatcaInfo:
+        $ref: '#/definitions/VccFatcaInfo'
+      generalInfo:
+        $ref: '#/definitions/VccGeneralInfo'
+      marketingPreference:
+        $ref: '#/definitions/VccMarketingPreference'
+      officeAddressInfo:
+        $ref: '#/definitions/VccBoAddressAndPhoneInfo'
+      permanentAddressInfo:
+        $ref: '#/definitions/VccBoAddressAndPhoneInfo'
+      pushInfo:
+        $ref: '#/definitions/VccPushInfo'
+      refNo:
+        type: string
+        description: Client generate application reference number
+      residentialAddressInfo:
+        $ref: '#/definitions/VccBoAddressAndPhoneInfo'
+      selectPermanentAddress:
+        type: boolean
+        example: false
+        description: Indicate Permanent Address is identical to Residential Address
+  VccCampaignCard:
+    type: object
+    properties:
+      campaignCode:
+        type: string
+        description: Campaign Code
+      cardType:
+        type: string
+        description: Credit card type
+      giftList:
+        type: array
+        description: Credit card gift list
+        items:
+          $ref: '#/definitions/VccCampaignCardGift'
+      merchantCampaign:
+        type: boolean
+        example: false
+  VccCampaignCardGift:
+    type: object
+    properties:
+      code:
+        type: string
+        description: gift code
+      detail:
+        type: string
+        description: Details of the gift
+      name:
+        type: string
+        description: name of the gift
+  VccCampaignResp:
+    type: object
+    properties:
+      cardList:
+        type: array
+        description: 'The credit card list could be applied via vcc '
+        items:
+          $ref: '#/definitions/VccCampaignCard'
+  VccCreditCardInfo:
+    type: object
+    properties:
+      campaignCode:
+        type: string
+        description: Campaign Code
+      cardType:
+        type: string
+        description: Card Type
+      giftCode:
+        type: string
+        description: Credit card gift code
+      tspid:
+        type: string
+  VccCreditCardPreference:
+    type: object
+    properties:
+      isExceedCreditLimit:
+        type: boolean
+        example: false
+    description: Credit Card Preference Input
+  VccCrsInfo:
+    type: object
+    properties:
+      nationalityDiffOtherReason:
+        type: string
+      nationalityDiffReason:
+        type: string
+      permanentAddressDiffOtherReason:
+        type: string
+      permanentAddressDiffReason:
+        type: string
+      residentialAddressDiffOtherReason:
+        type: string
+      residentialAddressDiffReason:
+        type: string
+      taxedRegions:
+        type: array
+        description: List of Taxed Regions
+        items:
+          $ref: '#/definitions/VccApplicationCrsInfoTaxedRegion'
+  VccDeclarationOfRelationship:
+    type: object
+    properties:
+      hasDeclarationOfRelationship:
+        type: boolean
+        example: false
+      nameOfRelatedStaff:
+        type: string
+      relationshipWithStaff:
+        type: string
+  VccDocumentInfo:
+    type: object
+    properties:
+      addressProofRefNo:
+        type: string
+      incomeProofRefNo:
+        type: string
+      passportCopyRefNo:
+        type: string
+  VccEligibilityResp:
+    type: object
+    properties:
+      isEligible:
+        type: boolean
+        example: false
+        description: Is eligible
+  VccEmploymentInfo:
+    type: object
+    properties:
+      companyName:
+        type: string
+      educationLevel:
+        type: string
+      expenseOnRental:
+        type: string
+      industry:
+        type: string
+      isSelfEmployed:
+        type: boolean
+        example: false
+      monthAtProfession:
+        type: string
+      monthOfPosition:
+        type: string
+      monthlyIncome:
+        type: string
+      occupation:
+        type: string
+      overHalfIncomeSourceFromPRC:
+        type: boolean
+        example: false
+      position:
+        type: string
+      profession:
+        type: string
+      yearAtProfession:
+        type: string
+      yearOfPosition:
+        type: string
+    description: Employment Info
+  VccExistenceResp:
+    type: object
+    properties:
+      applicationStatus:
+        type: string
+        description: existed application status
+      hasApplication:
+        type: boolean
+        example: false
+        description: Has existed application
+      isBundle:
+        type: boolean
+        example: false
+        description: is bundle application
+  VccFatcaInfo:
+    type: object
+    properties:
+      fatcaIndicator:
+        type: boolean
+        example: false
+      fatcaTin:
+        type: string
+      isBackupWithholding:
+        type: boolean
+        example: false
+  VccGeneralInfo:
+    type: object
+    properties:
+      boFirstName:
+        type: string
+      boLastName:
+        type: string
+      dateOfBirth:
+        type: string
+      email:
+        type: string
+      extraNationalityList:
+        type: array
+        items:
+          type: string
+      firstName:
+        type: string
+      gender:
+        type: string
+      idNo:
+        type: string
+      idType:
+        type: string
+      isHKPermanentResident:
+        type: boolean
+        example: false
+      lastName:
+        type: string
+      mobileNo:
+        type: string
+      mobileNoCountryCode:
+        type: string
+      nationality:
+        type: string
+      ocrFirstName:
+        type: string
+      ocrLastName:
+        type: string
+      placeOfBirth:
+        type: string
+    description: General Personal Info
+  VccHoldingInquiry:
+    type: object
+    properties:
+      hasCancelledCardInThePast12Months:
+        type: boolean
+        example: false
+      isGreenLightToVccCreation:
+        type: boolean
+        example: false
+  VccHouseKeepingReq:
+    type: object
+    properties:
+      systemDate:
+        type: string
+        description: systemDate
+  VccLandingResp:
+    type: object
+    properties:
+      isServiceHour:
+        type: boolean
+        example: false
+        description: Is service hour
+  VccLosInfo:
+    type: object
+    properties:
+      losApplicationNo:
+        type: string
+      straightThroughIndicator:
+        type: string
+  VccMarketingPreference:
+    type: object
+    properties:
+      isDirectMarketing:
+        type: boolean
+        example: false
+      isDirectMarketingEmail:
+        type: boolean
+        example: false
+      isDirectMarketingPhone:
+        type: boolean
+        example: false
+      isDirectMarketingPost:
+        type: boolean
+        example: false
+      isDirectMarketingSMS:
+        type: boolean
+        example: false
+      isDirectMarketingThirdParty:
+        type: boolean
+        example: false
+    description: Marketing Perference Input
+  VccPushInfo:
+    type: object
+    properties:
+      language:
+        type: string
+        description: Notification language
+  VccRmInfo:
+    type: object
+    properties:
+      inMotionEtbIndicator:
+        type: string
+      rmId:
+        type: string
+  VccTUInfo:
+    type: object
+    properties:
+      catfishIdIssuancePlace:
+        type: string
+        description: catfish Id issuance place
+      catfishTxnId:
+        type: string
+        description: catfish transaction Id
